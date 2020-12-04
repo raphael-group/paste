@@ -112,7 +112,7 @@ def objective_function(layers, pi, M, D, D_center, lmbda, alpha):
     """
     Calculates objective function R we are trying to minimize.
     
-    param: layers - List of Layers used to calculate center alignment
+    param: layers - List of STLayers used to calculate center alignment
     param: pi - List of ot maps between (center layer, layer_q)
     param: M - List of cost matrices between (center layer, layer_q)
     param: D - List of local distance matrices for each layer_q

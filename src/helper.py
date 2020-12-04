@@ -8,9 +8,9 @@ style.use('seaborn-dark')
 
 def generateDistanceMatrix(layer1, layer2):
     """
-    Custom function to convert spatial transcriptomics coordinate data into a euclidean distance matrix
+    Custom function to convert STLayer coordinate data into a euclidean distance matrix
     
-    parameter: layer - Layer object
+    parameter: layer - STLayer object
     return: D - 2D euclidean distance matrix
     """
     spots1 = layer1.gene_exp.index

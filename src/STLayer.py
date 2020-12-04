@@ -22,7 +22,7 @@ class STLayer:
         
     def copy(self):
         """
-        Returns a copy current Layer object.
+        Returns a copy current STLayer object.
         """
         return STLayer(self.gene_exp, self.coordinates)
     
