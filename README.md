@@ -5,3 +5,9 @@ PASTE is a computational method that leverages both gene expression similarity a
 2. `center_align`: integrate multiple ST layers into one center layer.
 
 PASTE is actively being worked on with future updates coming. 
+
+# Updates
+
+You can now run PASTE from the command line. 
+
+Sample execution: `python paste.py -m pairwise -f file1.tsv file2.tsv file3.tsv`
