@@ -38,6 +38,19 @@ def kl_divergence(X, Y):
     return np.asarray(D)
 
 
+def getCoordinates(df):
+    """
+    Extracts spatial coordinates from ST data with index in 'AxB' type format.
+    
+    Return: pandas dataframe of coordinates
+    """
+    coor = []
+    for spot in df.index:
+        coordinates = spot.split('x')
+        coordinates = [float(i) for i in coordinates]
+        coor.append(coordinates)
+    return coor
+
 
 def intersect(a, b): 
     """
