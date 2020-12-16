@@ -8,6 +8,24 @@ PASTE is actively being worked on with future updates coming.
 
 # Updates
 
+### Command Line
+
 You can now run PASTE from the command line. 
 
-Sample execution: `python paste.py -m pairwise -f file1.tsv file2.tsv file3.tsv`
+Sample execution: `python paste.py -m pairwise -f file1.csv file2.csv file3.csv`
+
+| Flag | Name | Description |
+| --- | --- | ---|
+| -m | mode | Select either `pairwise` or `center` |
+| -f | files | Path to data files (.csv) |
+| -d | direc | Directory to store output files |
+| -a | alpha | alpha parameter for PASTE |
+| -p | n_components | n_components for NMF step in `center_align` |
+| -t | threshold | Convergence threshold for `center_align` |
+
+
+### Sample Dataset
+
+Added sample spatial transcriptomics dataset consisting of four breast cancer layers courtesy of:
+
+Ståhl, Patrik & Salmén, Fredrik & Vickovic, Sanja & Lundmark, Anna & Fernandez Navarro, Jose & Magnusson, Jens & Giacomello, Stefania & Asp, Michaela & Westholm, Jakub & Huss, Mikael & Mollbrink, Annelie & Linnarsson, Sten & Codeluppi, Simone & Borg, Åke & Pontén, Fredrik & Costea, Paul & Sahlén, Pelin Akan & Mulder, Jan & Bergmann, Olaf & Frisén, Jonas. (2016). Visualization and analysis of gene expression in tissue sections by spatial transcriptomics. Science. 353. 78-82. 10.1126/science.aaf2403. 
