@@ -23,6 +23,14 @@ Sample execution: `python paste.py -m pairwise -f file1.csv file2.csv file3.csv`
 | -p | n_components | n_components for NMF step in `center_align` |
 | -t | threshold | Convergence threshold for `center_align` |
 
+Input files are .csv files of the form:
+
+```
+       	'gene_a'  'gene_b'
+'2x5'	   0         9      
+'2x7'	   2         6      
+```
+Where the columns indexes are gene names, row indexes are spatial coordinates, and entries are gene counts.
 
 ### Sample Dataset
 
