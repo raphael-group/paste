@@ -23,6 +23,8 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -d | direc | Directory to store output files |
 | -a | alpha | alpha parameter for PASTE |
 | -p | n_components | n_components for NMF step in `center_align` |
+| -l | lmbda | lambda parameter in `center_align` |
+| -i | intial_layer | Specify which file is also the intial layer in `center_align` |
 | -t | threshold | Convergence threshold for `center_align` |
 
 Input files are .csv files of the form:
