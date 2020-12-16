@@ -14,6 +14,8 @@ You can now run PASTE from the command line.
 
 Sample execution: `python paste.py -m pairwise -f file1.csv file2.csv file3.csv`
 
+Note: `pairwise` will return pairwise alignment between each consecutive pair of files (e.g. \[file1,file2\], \[file2,file3\]).
+
 | Flag | Name | Description |
 | --- | --- | ---|
 | -m | mode | Select either `pairwise` or `center` |
