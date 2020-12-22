@@ -5,7 +5,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
-from helper import generateDistanceMatrix
+from .helper import generateDistanceMatrix
 
 class STLayer:
     """

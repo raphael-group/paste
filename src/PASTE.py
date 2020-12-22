@@ -3,9 +3,9 @@ import pandas as pd
 import ot
 from sklearn.decomposition import NMF
 from numpy import linalg as LA
-from STLayer import STLayer
+from .STLayer import STLayer
 from scipy.spatial import distance_matrix
-from helper import generateDistanceMatrix, kl_divergence, intersect
+from .helper import generateDistanceMatrix, kl_divergence, intersect
 
 def pairwise_align(layer1, layer2, alpha = 0.1):
     """
