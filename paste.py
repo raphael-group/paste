@@ -67,7 +67,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f","--filename", help="path to data file (.tsv)",type=str, default=[], nargs='+')
+    parser.add_argument("-f","--filename", help="path to data file (.csv)",type=str, default=[], nargs='+')
     parser.add_argument("-m","--mode", help="either 'pairwise' or 'center' ", type=str, default="pairwise")
     parser.add_argument("-d","--direc", help="directory to save files",default='')
     parser.add_argument("-a","--alpha", help="alpha param for PASTE (float from [0,1])",type=float, default = 0.1)
