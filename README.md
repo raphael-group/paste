@@ -16,16 +16,16 @@ Sample execution: `python paste.py -m pairwise -f file1.csv file2.csv file3.csv`
 
 Note: `pairwise` will return pairwise alignment between each consecutive pair of files (e.g. \[file1,file2\], \[file2,file3\]).
 
-| Flag | Name | Description |
-| --- | --- | ---|
-| -m | mode | Select either `pairwise` or `center` |
-| -f | files | Path to data files (.csv) |
-| -d | direc | Directory to store output files |
-| -a | alpha | alpha parameter for PASTE |
-| -p | n_components | n_components for NMF step in `center_align` |
-| -l | lmbda | lambda parameter in `center_align` |
-| -i | intial_layer | Specify which file is also the intial layer in `center_align` |
-| -t | threshold | Convergence threshold for `center_align` |
+| Flag | Name | Description | Default Value |
+| --- | --- | --- | --- |
+| -m | mode | Select either `pairwise` or `center` | (str) `pairwise` |
+| -f | files | Path to data files (.csv) | None |
+| -d | direc | Directory to store output files | Current Directory |
+| -a | alpha | alpha parameter for PASTE | (float) `0.1` |
+| -p | n_components | n_components for NMF step in `center_align` | (int) `15` |
+| -l | lmbda | lambda parameter in `center_align` | (floats) probability vector of length `n`  |
+| -i | intial_layer | Specify which file is also the intial layer in `center_align` | (int) `1` |
+| -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
 
 Input files are .csv files of the form:
 
@@ -34,7 +34,7 @@ Input files are .csv files of the form:
 '2x5'	   0         9      
 '2x7'	   2         6      
 ```
-Where the columns indexes are gene names, row indexes are spatial coordinates, and entries are gene counts.
+Where the columns indexes are gene names (str), row indexes are spatial coordinates (str), and entries are gene counts (int). In particular, row indexes are of the form `AxB` where `A` and `B` are floats.
 
 ### Sample Dataset
 
