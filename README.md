@@ -8,6 +8,16 @@ PASTE is actively being worked on with future updates coming.
 
 # Updates
 
+### Dependencies
+
+To run PASTE, you will need the following Python packages:
+1. POT: Python Optimal Transport (https://PythonOT.github.io/)
+2. NetworkX (https://networkx.org/)
+3. Numpy
+4. Pandas 
+5. scipy.spatial
+6. sklearn.preprocessing
+
 ### Command Line
 
 You can now run PASTE from the command line. 
