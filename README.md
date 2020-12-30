@@ -6,8 +6,6 @@ PASTE is a computational method that leverages both gene expression similarity a
 
 PASTE is actively being worked on with future updates coming. 
 
-# Updates
-
 ### Dependencies
 
 To run PASTE, you will need the following Python packages:
@@ -17,6 +15,15 @@ To run PASTE, you will need the following Python packages:
 4. Pandas 
 5. scipy.spatial
 6. sklearn.preprocessing
+
+### Installation
+
+First, clone the repository:
+
+`git clone https://github.com/raphael-group/paste.git`
+
+Then, you can run PASTE from the command line.
+
 
 ### Command Line
 
