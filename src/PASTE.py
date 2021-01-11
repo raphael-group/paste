@@ -49,9 +49,9 @@ def center_align(A, original_layers, lmbda, alpha = 0.1, n_components = 15, thre
     
     return: W, H - low dimensional representation of gene expression matrix of center layer
     """
-    A = A.copy()
     
     # make a copy of original layers
+    A = A.copy()
     layers = []
     for l in original_layers:
         layers.append(l.copy())
@@ -66,7 +66,7 @@ def center_align(A, original_layers, lmbda, alpha = 0.1, n_components = 15, thre
     for l in layers:
         l.subset_genes(common_genes)
 
-    # calcualte local euclidean distance matrix
+    # calculate local euclidean distance matrix
     D = []
     for layer in layers:
         D.append(generateDistanceMatrix(layer, layer))
