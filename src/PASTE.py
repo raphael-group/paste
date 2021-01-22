@@ -18,10 +18,6 @@ def pairwise_align(layer1, layer2, alpha = 0.1):
     return: pi - alignment of spots
     """
     
-    # Make a copy of original layers
-    layer1 = layer1.copy()
-    layer2 = layer2.copy()
-    
     # subset for common genes
     common_genes = intersect(layer1.gene_exp.columns.tolist(), layer2.gene_exp.columns.tolist())
     layer1.subset_genes(common_genes)
@@ -37,24 +33,19 @@ def pairwise_align(layer1, layer2, alpha = 0.1):
     pi, logw = ot.gromov.fused_gromov_wasserstein(M, D1.to_numpy(), D2.to_numpy(), a, b, loss_fun='square_loss', alpha= alpha, verbose=False, log=True)
     return pi
 
-def center_align(A, original_layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0.001):
+def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0.001):
     """
     Computes center alignment of layers.
     
     param: A - Initialization of starting STLayer; include gene expression AND spatial
-    param: original_layers - List of STLayers used to calculate center alignment
+    param: layers - List of STLayers used to calculate center alignment
     param: lmbda - List of probability weights assigned to each STLayer
     param: n_components - Number of components in NMF decomposition
     param: threshold - Threshold for convergence of W and H
     
     return: W, H - low dimensional representation of gene expression matrix of center layer
     """
-    
-    # make a copy of original layers
     A = A.copy()
-    layers = []
-    for l in original_layers:
-        layers.append(l.copy())
     
     # get common genes
     common_genes = A.gene_exp.columns.to_list()
