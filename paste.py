@@ -58,9 +58,12 @@ def main(args):
         print("Computing center alignment.")
         initial_layer = layers[args.initial_layer - 1]
         # compute center align
-        W, H = center_align(initial_layer, layers, lmbda, args.alpha, args.n_components, args.threshold)
+        W, H, pis = center_align(initial_layer, layers, lmbda, args.alpha, args.n_components, args.threshold)
         np.savetxt(os.path.join(args.direc,"paste_output/W_center"), W, delimiter=',')
         np.savetxt(os.path.join(args.direc,"paste_output/H_center"), H, delimiter=',')
+        for i in range(len(pis)):
+            output_filename = "paste_output/layer_center_layer" + str(i+1) + "_pairwise"
+            np.savetxt(os.path.join(args.direc, output_filename), pis[i], delimiter=',')
         return
     return
         
