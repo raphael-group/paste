@@ -44,6 +44,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     param: threshold - Threshold for convergence of W and H
     
     return: W, H - low dimensional representation of gene expression matrix of center layer
+    return: pi - List of pairwise alignment mappings of each layer to the center layer
     """
     A = A.copy()
     
@@ -61,7 +62,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     D = []
     for layer in layers:
         D.append(generateDistanceMatrix(layer, layer))
-    model = NMF(n_components=n_components, init='random', random_state=0, max_iter = 1000)
+    model = NMF(n_components=n_components, init='random', random_state=0)
     W = model.fit_transform(A.gene_exp)
     H = model.components_
     center_coordinates = A.coordinates
@@ -82,7 +83,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
         R_diff = abs(R - R_new)
         print("R - R_new: " + str(R_diff))
         R = R_new
-    return W, H
+    return W, H, pi
 
 #--------------------------- HELPER METHODS -----------------------------------
 
@@ -101,7 +102,7 @@ def center_ot(W, H, layers, center_coordinates, common_genes, alpha):
 def center_NMF(W, H, layers, pi, lmbda, n_components):
     n = W.shape[0]
     B = n*sum([lmbda[i]*np.dot(pi[i], layers[i].gene_exp) for i in range(len(layers))])
-    model = NMF(n_components=n_components, init='random', random_state=0, max_iter = 1000)
+    model = NMF(n_components=n_components, init='random', random_state=0)
     W_new = model.fit_transform(B)
     H_new = model.components_
     return W_new, H_new
