@@ -46,7 +46,6 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     return: W, H - low dimensional representation of gene expression matrix of center layer
     return: pi - List of pairwise alignment mappings of the center layer (rows) to each input layer (columns)
     """
-    A = A.copy()
     
     # get common genes
     common_genes = A.gene_exp.columns.to_list()

@@ -14,6 +14,7 @@ class STLayer:
     param: self.gene_exp = gene expression data
     param: self.coordinates = 2D spatial data as a numpy array
     """
+    
     def __init__(self, gene_exp, coordinates):
         coordinates = np.array(coordinates)
         assert(gene_exp.shape[0] == coordinates.shape[0]), "Number of spots and coordinates don't match. Try again."
@@ -51,26 +52,6 @@ class STLayer:
             if nonzero_col_sum[i] >= threshold:
                 index.append(i)
         self.gene_exp = self.gene_exp.iloc[:, index]
-    
-    
-    def normalize_gene_exp(self):
-        """
-        Normalize gene expression
-        """
-        df = self.gene_exp
-        sums = df.sum(axis=1)
-        df = df.div(sums, axis=0)
-        
-        # log normalize
-        df = df + 1
-        df = np.log(df)
-
-        scalar = StandardScaler()
-        new_df = scalar.fit_transform(df)
-        new_df = pd.DataFrame(new_df)
-        new_df.columns = df.columns
-        new_df.index = df.index
-        self.gene_exp = new_df
         
         
     def subset_genes(self, gene_list):
@@ -96,7 +77,7 @@ class STLayer:
         
     def plot(self, title = None, cluster_labels = []):
         """
-        Visualizes distribution of spot coordinates
+        Visualizes distribution of spot coordinates.
         """
         plt.figure(figsize= (5, 5))
         x = self.coordinates[:, 0]
@@ -132,28 +113,6 @@ class STLayer:
         plt.title('Visualization of Tissue Layer')
         plt.show()
         
-    def to_graph(self, degree = 4):
-        """
-        Converts spatial coordinates into graph using networkx library.
-
-        param: degree - number of edges per vertex
-
-        return: 1) G - networkx graph
-                2) node_dict - dictionary mapping nodes to spots
-        """
-        D = generateDistanceMatrix(self, self)
-        # Get column indexes of the degree+1 lowest values per row
-        idx = np.argsort(D.values, 1)[:, 0:degree+1]
-        # Remove first column since it results in self loops
-        idx = idx[:, 1:]
-
-        G = nx.Graph()
-        for r in range(len(idx)):
-            for c in idx[r]:
-                G.add_edge(r, c)
-
-        node_dict = dict(zip(range(len(D.index)), D.index))
-        return G, node_dict
         
 # ------------------------------------ Helper Functions -------------------------------
 def rotate(origin, point, angle):

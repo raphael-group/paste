@@ -11,7 +11,8 @@ def generateDistanceMatrix(layer1, layer2):
     Custom function to convert STLayer coordinate data into a euclidean distance matrix
     
     parameter: layer - STLayer object
-    return: D - 2D euclidean distance matrix
+    
+    Return: D - 2D euclidean distance matrix
     """
     spots1 = layer1.gene_exp.index
     spots2 = layer2.gene_exp.index
@@ -26,7 +27,8 @@ def kl_divergence(X, Y):
     
     param: X - np array with dim (n_samples by n_features)
     param: Y - np array with dim (m_samples by n_features)
-    return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
+    
+    Return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
     X = X/X.sum(axis=1, keepdims=True)
