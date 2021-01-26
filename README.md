@@ -53,6 +53,10 @@ Input files are .csv files of the form:
 ```
 Where the columns indexes are gene names (str), row indexes are spatial coordinates (str), and entries are gene counts (int). In particular, row indexes are of the form `AxB` where `A` and `B` are floats.
 
+`pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of layers. The rows correspond to spots of the first layer, and cols the second.
+
+`center_align` outputs two files containing the low dimensional representation (NMF decomposition) of the center layer gene expression, and files containing a mapping of spots between the center layer (rows) to each input layer (cols).
+
 ### Sample Dataset
 
 Added sample spatial transcriptomics dataset consisting of four breast cancer layers courtesy of:
