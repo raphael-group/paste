@@ -33,10 +33,10 @@ def kl_divergence(X, Y):
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
     X = X/X.sum(axis=1, keepdims=True)
     Y = Y/Y.sum(axis=1, keepdims=True)
-    D = []
-    for row in X:
-        log = np.log(row*(1./Y))
-        D.append(np.dot(row, log.T))
+    log_X = np.log(X)
+    log_Y = np.log(Y)
+    X_log_X = np.matrix([np.dot(X[i],log_X[i].T) for i in range(X.shape[0])])
+    D = X_log_X.T - np.dot(X,log_Y.T)
     return np.asarray(D)
 
 
