@@ -4,6 +4,8 @@ PASTE is a computational method that leverages both gene expression similarity a
 1. `pairwise_align`: align spots across pairwise ST layers.
 2. `center_align`: integrate multiple ST layers into one center layer.
 
+You can read our preprint [here](https://www.biorxiv.org/content/10.1101/2021.03.16.435604v1). 
+
 PASTE is actively being worked on with future updates coming. 
 
 ### Dependencies
