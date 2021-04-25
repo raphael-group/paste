@@ -12,7 +12,6 @@ PASTE is actively being worked on with future updates coming.
 
 To run PASTE, you will need the following Python packages:
 1. POT: Python Optimal Transport (https://PythonOT.github.io/)
-2. NetworkX (https://networkx.org/)
 3. Numpy
 4. Pandas 
 5. scipy.spatial
@@ -20,18 +19,24 @@ To run PASTE, you will need the following Python packages:
 
 ### Installation
 
-First, clone the repository:
+The easiest way is to install PASTE on pypi: https://pypi.org/project/paste-bio/.
 
-`git clone https://github.com/raphael-group/paste.git`
+`pip install paste-bio`
 
-Then, you can run PASTE from the command line.
+Check out Tutorial.ipynb for an example of how to use PASTE.
+
+Or you can clone the respository and run from command line (see below).
 
 
 ### Command Line
 
-You can now run PASTE from the command line. 
+We provide the option of running PASTE from the command line. 
 
-Sample execution: `python paste.py -m pairwise -f file1.csv file2.csv file3.csv`
+First, clone the repository:
+
+`git clone https://github.com/raphael-group/paste.git`
+
+Sample execution: `python paste-cmd-line.py -m pairwise -f file1.csv file2.csv file3.csv`
 
 Note: `pairwise` will return pairwise alignment between each consecutive pair of files (e.g. \[file1,file2\], \[file2,file3\]).
 

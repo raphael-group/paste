@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import os
-from src import STLayer, pairwise_align, center_align, getCoordinates
+from src.paste import STLayer, pairwise_align, center_align, getCoordinates
 
 def main(args):
     print(args)
