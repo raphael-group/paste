@@ -33,7 +33,7 @@ def pairwise_align(layer1, layer2, alpha = 0.1):
     pi, logw = ot.gromov.fused_gromov_wasserstein(M, D1.to_numpy(), D2.to_numpy(), a, b, loss_fun='square_loss', alpha= alpha, verbose=False, log=True)
     return pi
 
-def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0.001):
+def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0.001, random_seed = None):
     """
     Computes center alignment of layers.
     
@@ -61,7 +61,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     D = []
     for layer in layers:
         D.append(generateDistanceMatrix(layer, layer))
-    model = NMF(n_components=n_components, init='random', random_state=0)
+    model = NMF(n_components=n_components, init='random', random_state= random_seed)
     W = model.fit_transform(A.gene_exp)
     H = model.components_
     center_coordinates = A.coordinates
@@ -78,7 +78,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     while R_diff > 0.001 and iteration_count < 10:
         print("Iteration: " + str(iteration_count))
         pi, r = center_ot(W, H, layers, center_coordinates, common_genes, alpha)
-        W, H = center_NMF(W, H, layers, pi, lmbda, n_components)
+        W, H = center_NMF(W, H, layers, pi, lmbda, n_components, random_seed)
         R_new = np.dot(r,lmbda)
         iteration_count += 1
         R_diff = abs(R - R_new)
@@ -100,10 +100,10 @@ def center_ot(W, H, layers, center_coordinates, common_genes, alpha):
         r.append(r_q)
     return pi, np.array(r)
 
-def center_NMF(W, H, layers, pi, lmbda, n_components):
+def center_NMF(W, H, layers, pi, lmbda, n_components, random_seed):
     n = W.shape[0]
     B = n*sum([lmbda[i]*np.dot(pi[i], layers[i].gene_exp) for i in range(len(layers))])
-    model = NMF(n_components=n_components, init='random', random_state=0)
+    model = NMF(n_components=n_components, init='random', random_state=random_seed)
     W_new = model.fit_transform(B)
     H_new = model.components_
     return W_new, H_new
