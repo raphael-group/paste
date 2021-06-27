@@ -61,7 +61,7 @@ def center_align(A, layers, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     D = []
     for layer in layers:
         D.append(generateDistanceMatrix(layer, layer))
-    model = NMF(n_components=n_components, init='random', random_state= random_seed)
+    model = NMF(n_components=n_components, solver = 'mu', beta_loss = 'kullback-leibler', init='random', random_state = random_seed)
     W = model.fit_transform(A.gene_exp)
     H = model.components_
     center_coordinates = A.coordinates
@@ -103,7 +103,7 @@ def center_ot(W, H, layers, center_coordinates, common_genes, alpha):
 def center_NMF(W, H, layers, pi, lmbda, n_components, random_seed):
     n = W.shape[0]
     B = n*sum([lmbda[i]*np.dot(pi[i], layers[i].gene_exp) for i in range(len(layers))])
-    model = NMF(n_components=n_components, init='random', random_state=random_seed)
+    model = NMF(n_components=n_components, solver = 'mu', beta_loss = 'kullback-leibler', init='random', random_state = random_seed)
     W_new = model.fit_transform(B)
     H_new = model.components_
     return W_new, H_new
