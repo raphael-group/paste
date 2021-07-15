@@ -12,6 +12,8 @@ PASTE is actively being worked on with future updates coming.
 
 As of version 1.1.0, PASTE now runs on AnnData making it very easy to integrate with Scanpy for better downstream analysis. Hooray!
 
+This also means that the old version that uses the `STLayer` object is now deprecated.
+
 ### Dependencies
 
 To run PASTE, you will need the following Python packages:
