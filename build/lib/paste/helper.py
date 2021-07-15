@@ -1,25 +1,19 @@
-import pandas as pd
 import numpy as np
-from scipy.spatial import distance_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
-from matplotlib import style
-style.use('seaborn-dark')
+import scipy
+import ot
 
-def generateDistanceMatrix(layer1, layer2):
+def filter_for_common_genes(slices):
     """
-    Custom function to convert STLayer coordinate data into a euclidean distance matrix
-    
-    parameter: layer - STLayer object
-    
-    Return: D - 2D euclidean distance matrix
+    param: slices - list of slices (AnnData objects)
     """
-    spots1 = layer1.gene_exp.index
-    spots2 = layer2.gene_exp.index
-    D = distance_matrix(layer1.coordinates, layer2.coordinates)
-    D = pd.DataFrame(D, index = spots1, columns = spots2)
-    return D
-
+    assert len(slices) > 0, "Cannot have empty list."
+    
+    common_genes = slices[0].var.index
+    for s in slices:
+        common_genes = intersect(common_genes, s.var.index)
+    for i in range(len(slices)):
+        slices[i] = slices[i][:, common_genes]
+    print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
 
 def kl_divergence(X, Y):
     """
@@ -28,9 +22,10 @@ def kl_divergence(X, Y):
     param: X - np array with dim (n_samples by n_features)
     param: Y - np array with dim (m_samples by n_features)
     
-    Return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
+    return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
+    
     X = X/X.sum(axis=1, keepdims=True)
     Y = Y/Y.sum(axis=1, keepdims=True)
     log_X = np.log(X)
@@ -40,24 +35,11 @@ def kl_divergence(X, Y):
     return np.asarray(D)
 
 
-def getCoordinates(df):
-    """
-    Extracts spatial coordinates from ST data with index in 'AxB' type format.
-    
-    Return: pandas dataframe of coordinates
-    """
-    coor = []
-    for spot in df.index:
-        coordinates = spot.split('x')
-        coordinates = [float(i) for i in coordinates]
-        coor.append(coordinates)
-    return coor
-
-
 def intersect(a, b): 
     """
     param: a - list
     param: b - list
+    
     return: list of common elements
     """
     a_set = set(a) 
@@ -67,4 +49,32 @@ def intersect(a, b):
     else: 
         print("No common elements")
         
-       
+
+def norm_and_center_coordinates(X): 
+    """
+    param: X - numpy array
+    
+    return: 
+    """
+    return (X-X.mean(axis=0))/min(scipy.spatial.distance.pdist(X))
+
+
+def match_spots_using_spatial_heuristic(X,Y,use_ot=True):
+    """
+    param: X - numpy array
+    param: Y - numpy array
+    
+    return: pi- mapping of spots using spatial heuristic
+    """
+    n1,n2=len(X),len(Y)
+    X,Y = norm_and_center_coordinates(X),norm_and_center_coordinates(Y)
+    dist = scipy.spatial.distance_matrix(X,Y)
+    if use_ot:
+        pi = ot.emd(np.ones(n1)/n1, np.ones(n2)/n2, dist)
+    else:
+        row_ind, col_ind = scipy.sparse.csgraph.min_weight_full_bipartite_matching(scipy.sparse.csr_matrix(dist))
+        pi = np.zeros((n1,n2))
+        pi[row_ind, col_ind] = 1/max(n1,n2)
+        if n1<n2: pi[:, [(j not in col_ind) for j in range(n2)]] = 1/(n1*n2)
+        elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
+    return pi

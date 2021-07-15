@@ -1,17 +1,22 @@
 # PASTE
 
 PASTE is a computational method that leverages both gene expression similarity and spatial distances between spots align and integrate spatial transcriptomics data. In particular, there are two methods:
-1. `pairwise_align`: align spots across pairwise ST layers.
-2. `center_align`: integrate multiple ST layers into one center layer.
+1. `pairwise_align`: align spots across pairwise slices.
+2. `center_align`: integrate multiple slices into one center slice.
 
 You can read our preprint [here](https://www.biorxiv.org/content/10.1101/2021.03.16.435604v1). 
 
 PASTE is actively being worked on with future updates coming. 
 
+### Recent News
+
+As of version 1.1.0, PASTE now runs on AnnData making it very easy to integrate with Scanpy for better downstream analysis. Hooray!
+
 ### Dependencies
 
 To run PASTE, you will need the following Python packages:
 1. POT: Python Optimal Transport (https://PythonOT.github.io/)
+2. Scanpy (https://scanpy.readthedocs.io/en/stable/)
 3. Numpy
 4. Pandas 
 5. scipy.spatial
@@ -36,9 +41,11 @@ First, clone the repository:
 
 `git clone https://github.com/raphael-group/paste.git`
 
-Sample execution: `python paste-cmd-line.py -m pairwise -f file1.csv file2.csv file3.csv`
+Next, when providing files, you will need to provide two separate files: the gene expression data followed by spatial data (both as .csv) for the code to initialize one slice object.
 
-Note: `pairwise` will return pairwise alignment between each consecutive pair of files (e.g. \[file1,file2\], \[file2,file3\]).
+Sample execution: `python paste-cmd-line.py -m pairwise -f slice1.csv slice1_coor.csv slice2.csv slice2_coor.csv slice3.csv slice3_coor.csv`
+
+Note: `pairwise` will return pairwise alignment between each consecutive pair of slices (e.g. \[slice1,slice2\], \[slice2,slice3\]).
 
 | Flag | Name | Description | Default Value |
 | --- | --- | --- | --- |
@@ -48,25 +55,16 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -a | alpha | alpha parameter for PASTE | (float) `0.1` |
 | -p | n_components | n_components for NMF step in `center_align` | (int) `15` |
 | -l | lmbda | lambda parameter in `center_align` | (floats) probability vector of length `n`  |
-| -i | intial_layer | Specify which file is also the intial layer in `center_align` | (int) `1` |
+| -i | intial_slice | Specify which file is also the intial slice in `center_align` | (int) `1` |
 | -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
 
-Input files are .csv files of the form:
+`pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of slices. The rows correspond to spots of the first slice, and cols the second.
 
-```
-       	'gene_a'  'gene_b'
-'2x5'	   0         9      
-'2x7'	   2         6      
-```
-Where the columns indexes are gene names (str), row indexes are spatial coordinates (str), and entries are gene counts (int). In particular, row indexes are of the form `AxB` where `A` and `B` are floats.
-
-`pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of layers. The rows correspond to spots of the first layer, and cols the second.
-
-`center_align` outputs two files containing the low dimensional representation (NMF decomposition) of the center layer gene expression, and files containing a mapping of spots between the center layer (rows) to each input layer (cols).
+`center_align` outputs two files containing the low dimensional representation (NMF decomposition) of the center slice gene expression, and files containing a mapping of spots between the center slice (rows) to each input slice (cols).
 
 ### Sample Dataset
 
-Added sample spatial transcriptomics dataset consisting of four breast cancer layers courtesy of:
+Added sample spatial transcriptomics dataset consisting of four breast cancer slice courtesy of:
 
 Ståhl, Patrik & Salmén, Fredrik & Vickovic, Sanja & Lundmark, Anna & Fernandez Navarro, Jose & Magnusson, Jens & Giacomello, Stefania & Asp, Michaela & Westholm, Jakub & Huss, Mikael & Mollbrink, Annelie & Linnarsson, Sten & Codeluppi, Simone & Borg, Åke & Pontén, Fredrik & Costea, Paul & Sahlén, Pelin Akan & Mulder, Jan & Bergmann, Olaf & Frisén, Jonas. (2016). Visualization and analysis of gene expression in tissue sections by spatial transcriptomics. Science. 353. 78-82. 10.1126/science.aaf2403. 
 

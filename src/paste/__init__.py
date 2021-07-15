@@ -1,4 +1,3 @@
 from .PASTE import pairwise_align, center_align
-from .helper import generateDistanceMatrix, kl_divergence, getCoordinates, intersect
-from .STLayer import STLayer
-from .visualization import plot_layer, stack_layers_pairwise, stack_layers_center
+from .helper import kl_divergence, intersect, match_spots_using_spatial_heuristic, filter_for_common_genes
+from .visualization import plot_slice, stack_slices_pairwise, stack_slices_center

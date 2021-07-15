@@ -1,80 +1,83 @@
-from .STLayer import STLayer
 import numpy as np
-import pandas as pd
 import seaborn as sns
 
 """
-    Functions to plot layers and align spatial coordinates after obtaining a mapping from PASTE.
+    Functions to plot slices and align spatial coordinates after obtaining a mapping from PASTE.
 """
 
-def stack_layers_pairwise(layers, pis):
+def stack_slices_pairwise(slices, pis):
     """
-    Align spatial coordinates of sequential pairwise layers.
+    Align spatial coordinates of sequential pairwise slices.
     
     In other words, align: 
     
-        layers[0] --> layers[1] --> layers[2] --> ...
+        slices[0] --> slices[1] --> slices[2] --> ...
     
-    param: layers - list of STLayers
-    param: pis - list of pi (pairwise_align output) between consecutive layers
+    param: slices - list of slices (AnnData Object)
+    param: pis - list of pi (pairwise_align output) between consecutive slices
     
-    Return: new_layers - list of STLayers with aligned spatial coordinates.
+    Return: new_layers - list of slices with aligned spatial coordinates.
     """
-    assert len(layers) == len(pis) + 1, "'layers' should have length one more than 'pis'. Please double check."
-    assert len(layers) > 1, "You should have at least 2 layers."
+    assert len(slices) == len(pis) + 1, "'slices' should have length one more than 'pis'. Please double check."
+    assert len(slices) > 1, "You should have at least 2 layers."
     new_coor = []
-    L1, L2 = generalized_procrustes_analysis(layers[0].coordinates, layers[1].coordinates, pis[0])
-    new_coor.append(L1)
-    new_coor.append(L2)
-    for i in range(1, len(layers) - 1):
-        x, y = generalized_procrustes_analysis(new_coor[i], layers[i+1].coordinates, pis[i])
+    S1, S2  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0])
+    new_coor.append(S1)
+    new_coor.append(S2)
+    for i in range(1, len(slices) - 1):
+        x, y = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i])
         new_coor.append(y)
     
-    new_layers = []
-    for i in range(len(layers)):
-        new_layers.append(STLayer(layers[i].gene_exp, new_coor[i]))
-    return new_layers
+    new_slices = []
+    for i in range(len(slices)):
+        s = slices[i].copy()
+        s.obsm['spatial'] = new_coor[i]
+        new_slices.append(s)
+    return new_slices
 
 
-def stack_layers_center(center_layer, layers, pis):
+def stack_slices_center(center_slice, slices, pis):
     """
-    Align spatial coordinates of a list of layers to a center_layer.
+    Align spatial coordinates of a list of slices to a center_slice.
     
     In other words, align:
     
-        layers[0] --> center_layer
-        layers[1] --> center_layer
-        layers[2] --> center_layer
+        slices[0] --> center_slice
+        slices[1] --> center_slice
+        slices[2] --> center_slice
         ...
     
-    param: center_layer - center STLayer
-    param: layers - list of STLayers
-    param: pis - list of pi (center_align output) between center_layer and layers
+    param: center_slice - inferred center slice (AnnData object)
+    param: slices - list of original slices to be aligned
+    param: pis - list of pi (center_align output) between center_slice and slices
     
-    Return: new_center - center STLayer with aligned spatial coordinates.
-    Return: new_layers - list of STLayers with aligned spatial coordinates.
+    Return: new_center - center slice with aligned spatial coordinates.
+    Return: new_layers - list of other slices with aligned spatial coordinates.
     """
-    assert len(layers) == len(pis), "'layers' should have the same length 'pis'. Please double check."
+    assert len(slices) == len(pis), "'slices' should have the same length 'pis'. Please double check."
     new_coor = []
 
-    for i in range(len(layers)):
-        c, y = generalized_procrustes_analysis(center_layer.coordinates, layers[i].coordinates, pis[i])
+    for i in range(len(slices)):
+        c, y = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i])
         new_coor.append(y)
     
-    new_layers = []
-    for i in range(len(layers)):
-        new_layers.append(STLayer(layers[i].gene_exp, new_coor[i]))
+    new_slices = []
+    for i in range(len(slices)):
+        s = slices[i].copy()
+        s.obsm['spatial'] = new_coor[i]
+        new_slices.append(s)
     
-    new_center = STLayer(pd.DataFrame(center_layer.gene_exp, columns = center_layer.gene_exp.columns), c)
-    return new_center, new_layers
+    new_center = center_slice.copy()
+    new_center.obsm['spatial'] = c
+    return new_center, new_slices
 
 
-def generalized_procrustes_analysis(X,Y,pi):
+def generalized_procrustes_analysis(X, Y, pi):
     """
     Finds and applies optimal rotation between spatial coordinates of two layers.
     
-    param: X - np array of spatial coordinates (ex: STLayer.coordinates)
-    param: Y - np array of spatial coordinates (ex: STLayer.coordinates)
+    param: X - np array of spatial coordinates (ex: sliceA.obs['spatial'])
+    param: Y - np array of spatial coordinates (ex: sliceB.obs['spatial'])
     param: pi - mapping between the two layers output by PASTE
 
     Return: aligned spatial coordinates of X, Y
@@ -88,18 +91,16 @@ def generalized_procrustes_analysis(X,Y,pi):
     return X,Y
 
 
-def plot_layer(layer, color, ax=None, s=100):
+def plot_slice(sliceX, color, ax=None, s=100):
     """
-    Plots STLayer spatial coordinates.
+    Plots slice spatial coordinates.
     
-    param: layer - STLayer
+    param: sliceX - AnnData Object of slice
     param: color - scatterplot color
     param: ax - Pre-existing axes for the plot. Otherwise, call matplotlib.pyplot.gca() internally.
     param: s - size of spots
     """
-    sns.scatterplot(x = layer.coordinates[:,0],y = layer.coordinates[:,1],linewidth=0,s=s, marker=".",color=color,ax=ax)
+    sns.scatterplot(x = sliceX.obsm['spatial'][:,0],y = sliceX.obsm['spatial'][:,1],linewidth=0,s=s, marker=".",color=color,ax=ax)
     if ax:
         ax.invert_yaxis()
         ax.axis('off')
-
-    
