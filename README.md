@@ -1,5 +1,7 @@
 # PASTE
 
+![PASTE Overview](https://github.com/raphael-group/paste/blob/main/paste_overview.jpg)
+
 PASTE is a computational method that leverages both gene expression similarity and spatial distances between spots to align and integrate spatial transcriptomics data. In particular, there are two methods:
 1. `pairwise_align`: align spots across pairwise slices.
 2. `center_align`: integrate multiple slices into one center slice.
