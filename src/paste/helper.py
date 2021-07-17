@@ -35,20 +35,17 @@ def kl_divergence(X, Y):
     return np.asarray(D)
 
 
-def intersect(a, b): 
+def intersect(lst1, lst2): 
     """
-    param: a - list
-    param: b - list
+    param: lst1 - list
+    param: lst2 - list
     
     return: list of common elements
     """
-    a_set = set(a) 
-    b_set = set(b) 
-    if (a_set & b_set): 
-        return list(a_set & b_set) 
-    else: 
-        print("No common elements")
-        
+
+    temp = set(lst2)
+    lst3 = [value for value in lst1 if value in temp]
+    return lst3 
 
 def norm_and_center_coordinates(X): 
     """
