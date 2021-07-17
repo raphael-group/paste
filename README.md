@@ -28,13 +28,17 @@ To run PASTE, you will need the following Python packages:
 
 ### Installation
 
-The easiest way is to install PASTE on pypi: https://pypi.org/project/paste-bio/.
+The easiest way is to install PASTE on pypi: https://pypi.org/project/paste-bio/. 
 
-`pip install paste-bio`
+`pip install paste-bio` 
+
+Or you can install PASTE on bioconda: https://anaconda.org/bioconda/paste-bio.
+
+`conda install -c bioconda paste-bio`
 
 Check out Tutorial.ipynb for an example of how to use PASTE.
 
-Or you can clone the respository and run from command line (see below).
+Lastly, you can clone the respository and run from command line (see below).
 
 
 ### Command Line
