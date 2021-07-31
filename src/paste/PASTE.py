@@ -3,8 +3,9 @@ import anndata
 import ot
 from sklearn.decomposition import NMF
 from scipy.spatial import distance_matrix
+import scipy
 from numpy import linalg as LA
-from .helper import kl_divergence, intersect
+from .helper import kl_divergence, intersect, to_dense_array
 
 def pairwise_align(sliceA, sliceB, alpha = 0.1, G_init = None, a_distribution = None, b_distribution = None, norm = False, numItermax = 200, return_obj = False, verbose = False, **kwargs):
     """
@@ -33,8 +34,8 @@ def pairwise_align(sliceA, sliceB, alpha = 0.1, G_init = None, a_distribution = 
     
     D_A = distance_matrix(sliceA.obsm['spatial'], sliceA.obsm['spatial'])
     D_B = distance_matrix(sliceB.obsm['spatial'], sliceB.obsm['spatial'])
-    s_A = sliceA.X + 0.01
-    s_B = sliceB.X + 0.01
+    s_A = to_dense_array(sliceA.X) + 0.01
+    s_B = to_dense_array(sliceB.X) + 0.01
     M = kl_divergence(s_A, s_B)
     
     if a_distribution is None:
@@ -48,8 +49,8 @@ def pairwise_align(sliceA, sliceB, alpha = 0.1, G_init = None, a_distribution = 
         b = b_distribution
     
     if norm:
-        D1 /= D1[D1>0].min().min()
-        D2 /= D2[D2>0].min().min()
+        D_A /= D_A[D_A>0].min().min()
+        D_B /= D_B[D_B>0].min().min()
     
     if G_init is None:
         pi, logw = ot.gromov.fused_gromov_wasserstein(M, D_A, D_B, a, b, loss_fun='square_loss', alpha= alpha, log=True, numItermax=numItermax,verbose=verbose)
@@ -99,7 +100,7 @@ def center_align(A, slices, lmbda, alpha = 0.1, n_components = 15, threshold = 0
         W = model.fit_transform(A.X)
     else:
         pis = pis_init
-        W = model.fit_transform(A.shape[0]*sum([lmbda[i]*np.dot(pis[i], slices[i].X) for i in range(len(slices))]))
+        W = model.fit_transform(A.shape[0]*sum([lmbda[i]*np.dot(pis[i], to_dense_array(slices[i].X)) for i in range(len(slices))]))
     H = model.components_
     center_coordinates = A.obsm['spatial']
     
@@ -146,7 +147,7 @@ def center_ot(W, H, slices, center_coordinates, common_genes, alpha, norm = Fals
 def center_NMF(W, H, slices, pis, lmbda, n_components, random_seed, verbose = False):
     print('Solving Center Mapping NMF Problem:')
     n = W.shape[0]
-    B = n*sum([lmbda[i]*np.dot(pis[i], slices[i].X) for i in range(len(slices))])
+    B = n*sum([lmbda[i]*np.dot(pis[i], to_dense_array(slices[i].X)) for i in range(len(slices))])
     model = NMF(n_components=n_components, solver = 'mu', beta_loss = 'kullback-leibler', init='random', random_state = random_seed, verbose = verbose)
     W_new = model.fit_transform(B)
     H_new = model.components_

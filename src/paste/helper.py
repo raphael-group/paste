@@ -75,3 +75,5 @@ def match_spots_using_spatial_heuristic(X,Y,use_ot=True):
         if n1<n2: pi[:, [(j not in col_ind) for j in range(n2)]] = 1/(n1*n2)
         elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
     return pi
+
+to_dense_array = lambda X: np.array(X.todense()) if isinstance(X,scipy.sparse.csr.spmatrix) else X
