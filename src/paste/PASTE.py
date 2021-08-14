@@ -67,7 +67,7 @@ def center_align(A, slices, lmbda = None, alpha = 0.1, n_components = 15, thresh
     
     param: A - Initialization of starting AnnData Spatial Object; Make sure to include gene expression AND spatial info
     param: slices - List of slices (AnnData objects) used to calculate center alignment
-    param: lmbda - List of probability weights assigned to each slice
+    param: lmbda - List of probability weights assigned to each slice; default is uniform weights
     param: n_components - Number of components in NMF decomposition
     param: threshold - Threshold for convergence of W and H
     param: max_iter - maximum number of iterations for solving for center slice
@@ -108,7 +108,7 @@ def center_align(A, slices, lmbda = None, alpha = 0.1, n_components = 15, thresh
     center_coordinates = A.obsm['spatial']
     
     if not isinstance(center_coordinates, np.ndarray):
-        print("Warning: A.obsm['spatial'] is not in numpy array format.")
+        print("Warning: A.obsm['spatial'] is not of type numpy array .")
     
     # Initialize center_slice
     center_slice = anndata.AnnData(np.dot(W,H))
