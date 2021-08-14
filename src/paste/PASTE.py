@@ -61,7 +61,7 @@ def pairwise_align(sliceA, sliceB, alpha = 0.1, G_init = None, a_distribution = 
         return pi, logw['fgw_dist']
     return pi
 
-def center_align(A, slices, lmbda, alpha = 0.1, n_components = 15, threshold = 0.001, max_iter = 10, norm = False, random_seed = None, pis_init = None, verbose = False):
+def center_align(A, slices, lmbda = None, alpha = 0.1, n_components = 15, threshold = 0.001, max_iter = 10, norm = False, random_seed = None, pis_init = None, verbose = False):
     """
     Computes center alignment of slices.
     
@@ -80,6 +80,9 @@ def center_align(A, slices, lmbda, alpha = 0.1, n_components = 15, threshold = 0
                             the gene expression matrix
     return: pi - List of pairwise alignment mappings of the center slice (rows) to each input slice (columns)
     """
+    
+    if lmbda is None:
+        lmbda = len(slices)*[1/len(slices)]
     
     # get common genes
     common_genes = A.var.index
@@ -104,9 +107,13 @@ def center_align(A, slices, lmbda, alpha = 0.1, n_components = 15, threshold = 0
     H = model.components_
     center_coordinates = A.obsm['spatial']
     
+    if not isinstance(center_coordinates, np.ndarray):
+        print("Warning: A.obsm['spatial'] is not in numpy array format.")
+    
     # Initialize center_slice
     center_slice = anndata.AnnData(np.dot(W,H))
     center_slice.var.index = common_genes
+    center_slice.obs.index = A.obs.index
     center_slice.obsm['spatial'] = center_coordinates
     
     # Minimize R
