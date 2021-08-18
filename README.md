@@ -38,7 +38,7 @@ Or you can install PASTE on bioconda: https://anaconda.org/bioconda/paste-bio.
 
 Check out Tutorial.ipynb for an example of how to use PASTE.
 
-Lastly, you can clone the respository and run from command line (see below).
+Alternatively, you can clone the respository and run from command line (see below).
 
 
 ### Command Line
@@ -51,7 +51,7 @@ First, clone the repository:
 
 Next, when providing files, you will need to provide two separate files: the gene expression data followed by spatial data (both as .csv) for the code to initialize one slice object.
 
-Sample execution: `python paste-cmd-line.py -m pairwise -f slice1.csv slice1_coor.csv slice2.csv slice2_coor.csv slice3.csv slice3_coor.csv`
+Sample execution (based on this repo): `python paste-cmd-line.py -m center -f ./sample_data/slice1.csv ./sample_data/slice1_coor.csv ./sample_data/slice2.csv ./sample_data/slice2_coor.csv ./sample_data/slice3.csv ./sample_data/slice3_coor.csv`
 
 Note: `pairwise` will return pairwise alignment between each consecutive pair of slices (e.g. \[slice1,slice2\], \[slice2,slice3\]).
 
