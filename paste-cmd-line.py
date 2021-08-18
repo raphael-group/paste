@@ -1,6 +1,7 @@
 import math
 import scanpy as sc
 import numpy as np
+import pandas as pd
 import argparse
 import os
 from src.paste import pairwise_align, center_align
@@ -52,19 +53,23 @@ def main(args):
         # compute pairwise align
         for i in range(n_slices - 1):
             pi = pairwise_align(slices[i], slices[i+1], args.alpha)
+            pi = pd.DataFrame(pi, index = slices[i].obs.index, columns = slices[i+1].obs.index)
             output_filename = "paste_output/slice" + str(i+1) + "_slice" + str(i+2) + "_pairwise.csv"
-            np.savetxt(os.path.join(args.direc, output_filename), pi, delimiter=',')
+            pi.to_csv(os.path.join(args.direc, output_filename))
         return
     elif args.mode == 'center':
         print("Computing center alignment.")
         initial_slice = slices[args.initial_slice - 1].copy()
         # compute center align
         center_slice, pis = center_align(initial_slice, slices, lmbda, args.alpha, args.n_components, args.threshold)
-        np.savetxt(os.path.join(args.direc,"paste_output/W_center"), center_slice.uns['paste_W'], delimiter=',')
-        np.savetxt(os.path.join(args.direc,"paste_output/H_center"), center_slice.uns['paste_H'], delimiter=',')
+        W = pd.DataFrame(center_slice.uns['paste_W'], index = center_slice.obs.index)
+        H = pd.DataFrame(center_slice.uns['paste_H'], columns = center_slice.var.index)
+        W.to_csv(os.path.join(args.direc,"paste_output/W_center"))
+        H.to_csv(os.path.join(args.direc,"paste_output/H_center"))
         for i in range(len(pis)):
             output_filename = "paste_output/slice_center_slice" + str(i+1) + "_pairwise"
-            np.savetxt(os.path.join(args.direc, output_filename), pis[i], delimiter=',')
+            pi = pd.DataFrame(pis[i], index = center_slice.obs.index, columns = slices[i].obs.index)
+            pi.to_csv(os.path.join(args.direc, output_filename))
         return
     return
         
