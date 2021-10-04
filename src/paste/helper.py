@@ -76,4 +76,8 @@ def match_spots_using_spatial_heuristic(X,Y,use_ot=True):
         elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
     return pi
 
+## Covert a sparse matrix into a dense matrix
 to_dense_array = lambda X: np.array(X.todense()) if isinstance(X,scipy.sparse.csr.spmatrix) else X
+
+## Returns the data matrix or representation
+extract_data_matrix = lambda adata,rep: adata.X if rep is None else adata.obsm[rep] 
