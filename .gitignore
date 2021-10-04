@@ -19,3 +19,7 @@ __pycache__/paste.cpython-37.pyc
 src/helper_ron.py
 src/PASTE_ron.py
 cortex_ron.ipynb
+sample_data/slice4_random_weights.csv
+sample_data/slice3_random_weights.csv
+sample_data/slice2_random_weights.csv
+sample_data/slice1_random_weights.csv
