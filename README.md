@@ -60,11 +60,14 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -m | mode | Select either `pairwise` or `center` | (str) `pairwise` |
 | -f | files | Path to data files (.csv) | None |
 | -d | direc | Directory to store output files | Current Directory |
-| -a | alpha | alpha parameter for PASTE | (float) `0.1` |
+| -a | alpha | Alpha parameter for PASTE | (float) `0.1` |
+| -c | cost | Expression dissimilarity cost (`kl` or `Euclidean`) | (str) `kl` |
 | -p | n_components | n_components for NMF step in `center_align` | (int) `15` |
-| -l | lmbda | lambda parameter in `center_align` | (floats) probability vector of length `n`  |
+| -l | lmbda | Lambda parameter in `center_align` | (floats) probability vector of length `n`  |
 | -i | intial_slice | Specify which file is also the intial slice in `center_align` | (int) `1` |
 | -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
+| -x | coordinates | Output new coordinates (toggle to turn on) | `Flase` |
+| -w | weights | Weights files of spots in each slice (.csv) | None |
 
 `pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of slices. The rows correspond to spots of the first slice, and cols the second.
 
