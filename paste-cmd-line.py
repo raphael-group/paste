@@ -11,26 +11,21 @@ def main(args):
     n_slices = int(len(args.filename)/2)
     # Error check arguments
     if args.mode != 'pairwise' and args.mode != 'center':
-        print("Error: please select either 'pairwise' or 'center' mode.")
-        return
+        raise(ValueError("Please select either 'pairwise' or 'center' mode."))
     
     if args.alpha < 0 or args.alpha > 1:
-        print("Error: alpha specified outside [0, 1].")
-        return
+        raise(ValueError("alpha specified outside [0, 1]"))
     
     if args.initial_slice < 1 or args.initial_slice > n_slices:
-        print("Error: initial slice specified outside [1, n].")
-        return
+        raise(ValueError("Initial slice specified outside [1, n]"))
     
     if len(args.lmbda) == 0:
         lmbda = n_slices*[1./n_slices]
     elif len(args.lmbda) != n_slices:
-        print("Error: length of lambda does not equal number of files.")
-        return
+        raise(ValueError("Length of lambda does not equal number of files"))
     else:
         if not all(i >= 0 for i in args.lmbda):
-            print("Error: lambda includes negative weights.")
-            return
+            raise(ValueError("lambda includes negative weights"))
         else:
             print("Normalizing lambda weights into probability vector.")
             lmbda = args.lmbda
@@ -53,6 +48,13 @@ def main(args):
             slices[i].obsm['weights'] = np.genfromtxt(args.weights[i], delimiter = ',')
             slices[i].obsm['weights'] = slices[i].obsm['weights']/np.sum(slices[i].obsm['weights'])
     
+    if len(args.start)==0:
+        pis_init = n_slices*[None]
+    elif (args.mode == 'pairwise' and len(args.start)!=n_slices-1) or (args.mode == 'center' and len(args.start)!=n_slices):
+        raise(ValueError("Number of slices {0} != number of start pi files {1}".format(n_slices,len(args.start))))
+    else:
+        pis_init = [pd.read_csv(args.start[i],index_col=0).to_numpy() for i in range(len(args.start))]
+
     # create output folder
     output_path = os.path.join(args.direc, "paste_output")
     if not os.path.exists(output_path):
@@ -63,7 +65,7 @@ def main(args):
         # compute pairwise align
         pis = []
         for i in range(n_slices - 1):
-            pi = pairwise_align(slices[i], slices[i+1], args.alpha, dissimilarity=args.cost, a_distribution=slices[i].obsm['weights'], b_distribution=slices[i+1].obsm['weights'])
+            pi = pairwise_align(slices[i], slices[i+1], args.alpha, dissimilarity=args.cost, a_distribution=slices[i].obsm['weights'], b_distribution=slices[i+1].obsm['weights'], G_init=pis_init[i])
             pis.append(pi)
             pi = pd.DataFrame(pi, index = slices[i].obs.index, columns = slices[i+1].obs.index)
             output_filename = "paste_output/slice" + str(i+1) + "_slice" + str(i+2) + "_pairwise.csv"
@@ -77,13 +79,13 @@ def main(args):
         print("Computing center alignment.")
         initial_slice = slices[args.initial_slice - 1].copy()
         # compute center align
-        center_slice, pis = center_align(initial_slice, slices, lmbda, args.alpha, args.n_components, args.threshold, dissimilarity=args.cost, distributions=[slices[i].obsm['weights'] for i in range(n_slices)])
+        center_slice, pis = center_align(initial_slice, slices, lmbda, args.alpha, args.n_components, args.threshold, dissimilarity=args.cost, distributions=[slices[i].obsm['weights'] for i in range(n_slices)], pis_init=pis_init)
         W = pd.DataFrame(center_slice.uns['paste_W'], index = center_slice.obs.index)
         H = pd.DataFrame(center_slice.uns['paste_H'], columns = center_slice.var.index)
         W.to_csv(os.path.join(args.direc,"paste_output/W_center"))
         H.to_csv(os.path.join(args.direc,"paste_output/H_center"))
         for i in range(len(pis)):
-            output_filename = "paste_output/slice_center_slice" + str(i+1) + "_pairwise"
+            output_filename = "paste_output/slice_center_slice" + str(i+1) + "_pairwise.csv"
             pi = pd.DataFrame(pis[i], index = center_slice.obs.index, columns = slices[i].obs.index)
             pi.to_csv(os.path.join(args.direc, output_filename))
         if args.coordinates:
@@ -107,6 +109,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--initial_slice", help="specify which slice is the intial slice for center_align (int from 1-n)",type=int, default = 1) 
     parser.add_argument("-t","--threshold", help="convergence threshold for center_align",type=float, default = 0.001)
     parser.add_argument("-x","--coordinates", help="output new coordinates", action='store_true', default = False)
-    parser.add_argument("-w","--weights", help="path to files containing weights of spots in each slice",type=str, default=[], nargs='+')
+    parser.add_argument("-w","--weights", help="path to files containing weights of spots in each slice. The format of the files is the same as the coordinate files used as input",type=str, default=[], nargs='+')
+    parser.add_argument("-s","--start", help="path to files containing initial starting alignmnets. If not given the OT starts the search with uniform alignments. The format of the files is the same as the alignments files output by PASTE",type=str, default=[], nargs='+')
     args = parser.parse_args()
     main(args)
