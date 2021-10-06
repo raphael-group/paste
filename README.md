@@ -68,6 +68,7 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
 | -x | coordinates | Output new coordinates (toggle to turn on) | `Flase` |
 | -w | weights | Weights files of spots in each slice (.csv) | None |
+| -w | start | Initial alignments for OT. If not given uses uniform (.csv structure similar to alignment output) | None |
 
 `pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of slices. The rows correspond to spots of the first slice, and cols the second.
 
