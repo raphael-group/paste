@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: paste-bio
-Version: 1.1.2
+Version: 1.1.3
 Summary: A computational method to align and integrate spatial transcriptomics experiments.
 Home-page: https://github.com/raphael-group/paste
 Author: Max Land
@@ -55,7 +55,7 @@ Or you can install PASTE on bioconda: https://anaconda.org/bioconda/paste-bio.
 
 Check out Tutorial.ipynb for an example of how to use PASTE.
 
-Lastly, you can clone the respository and run from command line (see below).
+Alternatively, you can clone the respository and run from command line (see below).
 
 
 ### Command Line
@@ -68,7 +68,7 @@ First, clone the repository:
 
 Next, when providing files, you will need to provide two separate files: the gene expression data followed by spatial data (both as .csv) for the code to initialize one slice object.
 
-Sample execution: `python paste-cmd-line.py -m pairwise -f slice1.csv slice1_coor.csv slice2.csv slice2_coor.csv slice3.csv slice3_coor.csv`
+Sample execution (based on this repo): `python paste-cmd-line.py -m center -f ./sample_data/slice1.csv ./sample_data/slice1_coor.csv ./sample_data/slice2.csv ./sample_data/slice2_coor.csv ./sample_data/slice3.csv ./sample_data/slice3_coor.csv`
 
 Note: `pairwise` will return pairwise alignment between each consecutive pair of slices (e.g. \[slice1,slice2\], \[slice2,slice3\]).
 
@@ -77,11 +77,15 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -m | mode | Select either `pairwise` or `center` | (str) `pairwise` |
 | -f | files | Path to data files (.csv) | None |
 | -d | direc | Directory to store output files | Current Directory |
-| -a | alpha | alpha parameter for PASTE | (float) `0.1` |
+| -a | alpha | Alpha parameter for PASTE | (float) `0.1` |
+| -c | cost | Expression dissimilarity cost (`kl` or `Euclidean`) | (str) `kl` |
 | -p | n_components | n_components for NMF step in `center_align` | (int) `15` |
-| -l | lmbda | lambda parameter in `center_align` | (floats) probability vector of length `n`  |
+| -l | lmbda | Lambda parameter in `center_align` | (floats) probability vector of length `n`  |
 | -i | intial_slice | Specify which file is also the intial slice in `center_align` | (int) `1` |
 | -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
+| -x | coordinates | Output new coordinates (toggle to turn on) | `Flase` |
+| -w | weights | Weights files of spots in each slice (.csv) | None |
+| -s | start | Initial alignments for OT. If not given uses uniform (.csv structure similar to alignment output) | None |
 
 `pairwise_align` outputs a (.csv) file containing mapping of spots between each consecutive pair of slices. The rows correspond to spots of the first slice, and cols the second.
 
