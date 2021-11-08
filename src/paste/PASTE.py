@@ -39,12 +39,12 @@ def pairwise_align(sliceA, sliceB, alpha = 0.1, dissimilarity='kl', use_rep = No
     D_B = distance_matrix(sliceB.obsm['spatial'], sliceB.obsm['spatial'])
     
     # Calculate expression dissimilarity
-    A_X, B_X = extract_data_matrix(sliceA,use_rep), extract_data_matrix(sliceB,use_rep)
+    A_X, B_X = to_dense_array(extract_data_matrix(sliceA,use_rep)), to_dense_array(extract_data_matrix(sliceB,use_rep))
     if dissimilarity.lower()=='euclidean' or dissimilarity.lower()=='euc':
         M = distance_matrix(A_X, B_X)
     else:
-        s_A = to_dense_array(A_X) + 0.01
-        s_B = to_dense_array(B_X) + 0.01
+        s_A = A_X + 0.01
+        s_B = B_X + 0.01
         M = kl_divergence(s_A, s_B)
     
     # init distributions
@@ -168,6 +168,7 @@ def center_align(A, slices, lmbda = None, alpha = 0.1, n_components = 15, thresh
     center_slice.uns['paste_W'] = W
     center_slice.uns['paste_H'] = H
     center_slice.uns['full_rank'] = center_slice.shape[0]*sum([lmbda[i]*np.dot(pis[i], to_dense_array(slices[i].X)) for i in range(len(slices))])
+    center_slice.uns['obj'] = R
     return center_slice, pis
 
 #--------------------------- HELPER METHODS -----------------------------------

@@ -49,7 +49,7 @@ def main(args):
             slices[i].obsm['weights'] = slices[i].obsm['weights']/np.sum(slices[i].obsm['weights'])
     
     if len(args.start)==0:
-        pis_init = n_slices*[None]
+        pis_init = (n_slices-1)*[None] if args.mode == 'pairwise' else None
     elif (args.mode == 'pairwise' and len(args.start)!=n_slices-1) or (args.mode == 'center' and len(args.start)!=n_slices):
         raise(ValueError("Number of slices {0} != number of start pi files {1}".format(n_slices,len(args.start))))
     else:
