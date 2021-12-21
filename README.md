@@ -66,7 +66,7 @@ Note: `pairwise` will return pairwise alignment between each consecutive pair of
 | -l | lmbda | Lambda parameter in `center_align` | (floats) probability vector of length `n`  |
 | -i | intial_slice | Specify which file is also the intial slice in `center_align` | (int) `1` |
 | -t | threshold | Convergence threshold for `center_align` | (float) `0.001` |
-| -x | coordinates | Output new coordinates (toggle to turn on) | `Flase` |
+| -x | coordinates | Output new coordinates (toggle to turn on) | `False` |
 | -w | weights | Weights files of spots in each slice (.csv) | None |
 | -s | start | Initial alignments for OT. If not given uses uniform (.csv structure similar to alignment output) | None |
 
