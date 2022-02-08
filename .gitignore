@@ -16,7 +16,7 @@ sample_data/RA-and-SP*
 .ipynb_checkpoints/
 !Tutorial-checkpoint.ipynp
 ST_sim.ipynb
-src/__pycache__/visualization.cpython-37.pyc
+src/__pycache__/*
 __pycache__/paste.cpython-37.pyc
 src/helper_ron.py
 src/PASTE_ron.py
@@ -27,3 +27,10 @@ sample_data/slice2_random_weights.csv
 sample_data/slice1_random_weights.csv
 SlideSeq2.ipynb
 her2.ipynb
+overlap-sim.ipynb
+overlap-sim-with-paste-analysis.ipynb
+sim/*
+DLPFC.ipynb
+src/paste/__pycache__/*
+src/paste/__pycache__/PASTE.cpython-38.pyc
+DLPFC_new.ipynb
