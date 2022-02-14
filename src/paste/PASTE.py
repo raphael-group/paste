@@ -2,7 +2,7 @@ import numpy as np
 import anndata
 import ot
 from sklearn.decomposition import NMF
-from scipy.spatial import distance_matrix
+from scipy.spatial import distance
 import scipy
 from numpy import linalg as LA
 from .helper import kl_divergence, intersect, to_dense_array, extract_data_matrix
@@ -35,13 +35,13 @@ def pairwise_align(sliceA, sliceB, alpha = 0.1, dissimilarity='kl', use_rep = No
     # print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
     
     # Calculate spatial distances
-    D_A = distance_matrix(sliceA.obsm['spatial'], sliceA.obsm['spatial'])
-    D_B = distance_matrix(sliceB.obsm['spatial'], sliceB.obsm['spatial'])
+    D_A = distance.cdist(sliceA.obsm['spatial'], sliceA.obsm['spatial'])
+    D_B = distance.cdist(sliceB.obsm['spatial'], sliceB.obsm['spatial'])
     
     # Calculate expression dissimilarity
     A_X, B_X = to_dense_array(extract_data_matrix(sliceA,use_rep)), to_dense_array(extract_data_matrix(sliceB,use_rep))
     if dissimilarity.lower()=='euclidean' or dissimilarity.lower()=='euc':
-        M = distance_matrix(A_X, B_X)
+        M = distance.cdist(A_X, B_X)
     else:
         s_A = A_X + 0.01
         s_B = B_X + 0.01
