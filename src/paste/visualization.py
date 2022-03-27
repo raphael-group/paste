@@ -15,6 +15,7 @@ def stack_slices_pairwise(slices, pis, output_params=False):
     
     param: slices - list of slices (AnnData Object)
     param: pis - list of pi (pairwise_align output) between consecutive slices
+    param: output_params - Boolean for whether to return angles of rotation (theta) and translations for each slice
     
     Return: new_layers - list of slices with aligned spatial coordinates.
     """
@@ -67,6 +68,8 @@ def stack_slices_center(center_slice, slices, pis, output_params=False):
     param: center_slice - inferred center slice (AnnData object)
     param: slices - list of original slices to be aligned
     param: pis - list of pi (center_align output) between center_slice and slices
+    param: output_params - Boolean for whether to return angles of rotation (theta) and translations for each slice
+
     
     Return: new_center - center slice with aligned spatial coordinates.
     Return: new_layers - list of other slices with aligned spatial coordinates.

@@ -34,6 +34,30 @@ def kl_divergence(X, Y):
     D = X_log_X.T - np.dot(X,log_Y.T)
     return np.asarray(D)
 
+def kl_divergence_backend(X, Y):
+    """
+    Returns pairwise KL divergence (over all pairs of samples) of two matrices X and Y.
+    
+    Takes advantage of POT backend to speed up computation.
+    
+    param: X - np array with dim (n_samples by n_features)
+    param: Y - np array with dim (m_samples by n_features)
+    
+    return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
+    """
+    assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
+
+    nx = ot.backend.get_backend(X,Y)
+    
+    X = X/nx.sum(X,axis=1, keepdims=True)
+    Y = Y/nx.sum(Y,axis=1, keepdims=True)
+    log_X = nx.log(X)
+    log_Y = nx.log(Y)
+    X_log_X = nx.einsum('ij,ij->i',X,log_X)
+    X_log_X = nx.reshape(X_log_X,(1,X_log_X.shape[0]))
+    D = X_log_X.T - nx.dot(X,log_Y.T)
+    return nx.to_numpy(D)
+
 
 def intersect(lst1, lst2): 
     """
@@ -76,8 +100,8 @@ def match_spots_using_spatial_heuristic(X,Y,use_ot=True):
         elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
     return pi
 
-## Covert a sparse matrix into a dense matrix
-to_dense_array = lambda X: np.array(X.todense()) if isinstance(X,scipy.sparse.csr.spmatrix) else X
+## Covert a sparse matrix into a dense np array
+to_dense_array = lambda X: X.toarray() if isinstance(X,scipy.sparse.csr.spmatrix) else np.array(X)
 
 ## Returns the data matrix or representation
 extract_data_matrix = lambda adata,rep: adata.X if rep is None else adata.obsm[rep] 
