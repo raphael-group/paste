@@ -113,6 +113,15 @@ W = center_slice.uns['paste_W']
 H = center_slice.uns['paste_H']
 ```
 
+### GPU implementation
+PASTE now is compatible with gpu via Pytorch. All we need to do is add the following two parameters to our main functions:
+```
+pi12 = pst.pairwise_align(slice1, slice2, backend = ot.backend.TorchBackend(), use_gpu = True)
+
+center_slice, pis = pst.center_align(initial_slice, slices, lmbda, backend = ot.backend.TorchBackend(), use_gpu = True) 
+```
+For more details, see the GPU section of the [Tutorial notebook](Tutorial.ipynb).
+
 ### Command Line
 
 We provide the option of running PASTE from the command line. 
