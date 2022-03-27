@@ -12,9 +12,7 @@ PASTE is actively being worked on with future updates coming.
 
 ### Recent News
 
-As of version 1.1.0, PASTE now runs on AnnData making it very easy to integrate with Scanpy for better downstream analysis. Hooray!
-
-This also means that the old version that uses the `STLayer` object is now deprecated.
+As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](Tutorial.ipynb).
 
 ### Dependencies
 
