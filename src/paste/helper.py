@@ -1,10 +1,17 @@
+from anndata import AnnData
+from numpy.typing import ArrayLike
+from typing import List
 import numpy as np
 import scipy
 import ot
 
-def filter_for_common_genes(slices):
+def filter_for_common_genes(
+    slices: List[AnnData]) -> None:
     """
-    param: slices - list of slices (AnnData objects)
+    Filters for the intersection of genes between all slices.
+
+    Args:
+        slices: List of slices.
     """
     assert len(slices) > 0, "Cannot have empty list."
     
@@ -15,14 +22,44 @@ def filter_for_common_genes(slices):
         slices[i] = slices[i][:, common_genes]
     print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
 
+def match_spots_using_spatial_heuristic(
+    X,
+    Y,
+    use_ot: bool = True) -> np.ndarray:
+    """
+    Calculates and returns a mapping of spots using a spatial heuristic.
+
+    Args:
+        X (array-like, optional): Coordinates for spots X.
+        Y (array-like, optional): Coordinates for spots Y.
+        use_ot: If ``True``, use optimal transport to calculate mapping. Else, use bipartite matching algorithm.
+    
+    Returns:
+        Mapping of spots using a spatial heuristic.
+    """
+    n1,n2=len(X),len(Y)
+    X,Y = norm_and_center_coordinates(X),norm_and_center_coordinates(Y)
+    dist = scipy.spatial.distance_matrix(X,Y)
+    if use_ot:
+        pi = ot.emd(np.ones(n1)/n1, np.ones(n2)/n2, dist)
+    else:
+        row_ind, col_ind = scipy.sparse.csgraph.min_weight_full_bipartite_matching(scipy.sparse.csr_matrix(dist))
+        pi = np.zeros((n1,n2))
+        pi[row_ind, col_ind] = 1/max(n1,n2)
+        if n1<n2: pi[:, [(j not in col_ind) for j in range(n2)]] = 1/(n1*n2)
+        elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
+    return pi
+
 def kl_divergence(X, Y):
     """
     Returns pairwise KL divergence (over all pairs of samples) of two matrices X and Y.
     
-    param: X - np array with dim (n_samples by n_features)
-    param: Y - np array with dim (m_samples by n_features)
+    Args:
+        X: np array with dim (n_samples by n_features)
+        Y: np array with dim (m_samples by n_features)
     
-    return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
+    Returns:
+        D: np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
     
@@ -40,10 +77,12 @@ def kl_divergence_backend(X, Y):
     
     Takes advantage of POT backend to speed up computation.
     
-    param: X - np array with dim (n_samples by n_features)
-    param: Y - np array with dim (m_samples by n_features)
+    Args:
+        X: np array with dim (n_samples by n_features)
+        Y: np array with dim (m_samples by n_features)
     
-    return: D - np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
+    Returns:
+        D: np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
 
@@ -61,10 +100,14 @@ def kl_divergence_backend(X, Y):
 
 def intersect(lst1, lst2): 
     """
-    param: lst1 - list
-    param: lst2 - list
+    Gets and returns intersection of two lists.
+
+    Args:
+        lst1: List
+        lst2: List
     
-    return: list of common elements
+    Returns:
+        lst3: List of common elements.
     """
 
     temp = set(lst2)
@@ -73,32 +116,16 @@ def intersect(lst1, lst2):
 
 def norm_and_center_coordinates(X): 
     """
-    param: X - numpy array
+    Normalizes and centers coordinates at the origin.
+
+    Args:
+        X: Numpy array
     
-    return: 
+    Returns:
+        X_new: Updated coordiantes.
     """
     return (X-X.mean(axis=0))/min(scipy.spatial.distance.pdist(X))
 
-
-def match_spots_using_spatial_heuristic(X,Y,use_ot=True):
-    """
-    param: X - numpy array
-    param: Y - numpy array
-    
-    return: pi- mapping of spots using spatial heuristic
-    """
-    n1,n2=len(X),len(Y)
-    X,Y = norm_and_center_coordinates(X),norm_and_center_coordinates(Y)
-    dist = scipy.spatial.distance_matrix(X,Y)
-    if use_ot:
-        pi = ot.emd(np.ones(n1)/n1, np.ones(n2)/n2, dist)
-    else:
-        row_ind, col_ind = scipy.sparse.csgraph.min_weight_full_bipartite_matching(scipy.sparse.csr_matrix(dist))
-        pi = np.zeros((n1,n2))
-        pi[row_ind, col_ind] = 1/max(n1,n2)
-        if n1<n2: pi[:, [(j not in col_ind) for j in range(n2)]] = 1/(n1*n2)
-        elif n2<n1: pi[[(i not in row_ind) for i in range(n1)], :] = 1/(n1*n2)
-    return pi
 
 ## Covert a sparse matrix into a dense np array
 to_dense_array = lambda X: X.toarray() if isinstance(X,scipy.sparse.csr.spmatrix) else np.array(X)
