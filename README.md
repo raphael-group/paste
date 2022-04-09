@@ -14,16 +14,6 @@ PASTE is actively being worked on with future updates coming.
 
 As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
 
-### Dependencies
-
-To run PASTE, you will need the following Python packages:
-1. POT: Python Optimal Transport (https://PythonOT.github.io/)
-2. Scanpy (https://scanpy.readthedocs.io/en/stable/)
-3. Numpy
-4. Pandas 
-5. scipy.spatial
-6. sklearn.preprocessing
-
 ### Installation
 
 The easiest way is to install PASTE on pypi: https://pypi.org/project/paste-bio/. 
