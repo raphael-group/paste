@@ -1,6 +1,23 @@
+from anndata import AnnData
 import numpy as np
 import scipy
 import ot
+
+def filter_for_common_genes(
+    slices: List[AnnData]) -> None:
+    """
+    Filters for the intersection of genes between all slices.
+    Args:
+        slices: List of slices.
+    """
+    assert len(slices) > 0, "Cannot have empty list."
+    
+    common_genes = slices[0].var.index
+    for s in slices:
+        common_genes = intersect(common_genes, s.var.index)
+    for i in range(len(slices)):
+        slices[i] = slices[i][:, common_genes]
+    print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
 
 def match_spots_using_spatial_heuristic(
     X,
