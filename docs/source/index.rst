@@ -24,6 +24,7 @@ You can view our `preprint <https://www.biorxiv.org/content/10.1101/2021.03.16.4
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :hidden:
 
    installation
    api
