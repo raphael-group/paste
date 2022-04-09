@@ -1,8 +1,0 @@
-anndata==0.7.6
-scanpy==1.7.2
-sinfo==0.3.4
-IPython==7.18.1
-jupyter_client==6.1.7
-jupyter_core==4.6.3
-notebook==6.4.0
-POT==0.8.1.0
