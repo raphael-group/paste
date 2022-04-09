@@ -4,3 +4,4 @@ POT>=0.8.1.0
 numpy
 scipy
 scikit-learn>=0.24.0
+IPython>=7.18.1
