@@ -5,7 +5,7 @@ Import Paste as::
 
     import paste as pst
 
-.. automodule:: paste
+.. automodule:: src.paste
 
 Alignment
 ~~~~~~~~~

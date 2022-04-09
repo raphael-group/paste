@@ -18,7 +18,7 @@ import sys
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent.parent)) 
 
-import paste
+import src
 
 # -- Project information -----------------------------------------------------
 
