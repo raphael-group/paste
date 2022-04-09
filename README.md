@@ -1,6 +1,6 @@
 # PASTE
 
-![PASTE Overview](https://github.com/raphael-group/paste/blob/main/paste_overview.png)
+![PASTE Overview](https://github.com/raphael-group/paste/blob/main/docs/source/_static/images/paste_overview.png)
 
 PASTE is a computational method that leverages both gene expression similarity and spatial distances between spots to align and integrate spatial transcriptomics data. In particular, there are two methods:
 1. `pairwise_align`: align spots across pairwise slices.
@@ -12,7 +12,7 @@ PASTE is actively being worked on with future updates coming.
 
 ### Recent News
 
-As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](Tutorial.ipynb).
+As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
 
 ### Dependencies
 
@@ -120,7 +120,7 @@ pi12 = pst.pairwise_align(slice1, slice2, backend = ot.backend.TorchBackend(), u
 
 center_slice, pis = pst.center_align(initial_slice, slices, lmbda, backend = ot.backend.TorchBackend(), use_gpu = True) 
 ```
-For more details, see the GPU section of the [Tutorial notebook](Tutorial.ipynb).
+For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
 
 ### Command Line
 
