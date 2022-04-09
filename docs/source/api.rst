@@ -5,10 +5,10 @@ Import Paste as::
 
     import paste as pst
 
+.. automodule:: paste
+
 Alignment
 ~~~~~~~~~
-
-.. currentmodule:: paste
 
 .. autosummary::
    :toctree: api
@@ -19,8 +19,6 @@ Alignment
 Visualization
 ~~~~~~~~~~~~~
 
-.. currentmodule:: paste
-
 .. autosummary::
    :toctree: api
 
@@ -30,8 +28,6 @@ Visualization
 
 Miscellaneous
 ~~~~~~~~~~~~~
-
-.. currentmodule:: paste
 
 .. autosummary::
    :toctree: api
