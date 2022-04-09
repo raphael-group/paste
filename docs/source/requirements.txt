@@ -1,0 +1,8 @@
+sphinx>=2.0.1
+myst-parser
+nbsphinx
+sphinx-autodoc-typehints
+sphinx-autodoc-annotation
+sphinx-autodoc-typehints>=1.10.3
+sphinx_rtd_theme
+sphinx_gallery>=0.8.2
