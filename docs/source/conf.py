@@ -43,7 +43,7 @@ extensions = [
     "sphinx_autodoc_typehints",
     "nbsphinx",
     "sphinx_gallery.load_style",
-
+    "sphinx.ext.viewcode"
 ]
 
 # Moves Type hints from function header into description
@@ -75,6 +75,9 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_show_sourcelink = False
+
 
 nbsphinx_thumbnails = {
     "notebooks/getting-started": "_static/images/breast_stack_2d.png",
