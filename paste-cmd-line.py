@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import argparse
 import os
-from paste import pairwise_align, center_align, stack_slices_pairwise, stack_slices_center
+from src.paste import pairwise_align, center_align, stack_slices_pairwise, stack_slices_center
 
 def main(args):
     # print(args)
