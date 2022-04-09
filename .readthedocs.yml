@@ -1,0 +1,16 @@
+version: 2
+
+sphinx:
+    builder: html
+    configuration: docs/source/conf.py
+    fail_on_warning: false
+
+build:
+    image: latest
+
+python:
+    version: 3.8
+    install:
+    -   method: pip
+        path: .
+    -   requirements: docs/requirements.txt

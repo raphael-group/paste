@@ -1,4 +1,3 @@
-from optparse import Option
 from typing import List, Tuple, Optional
 from anndata import AnnData
 import numpy as np
@@ -41,7 +40,7 @@ def stack_slices_pairwise(
     if not output_params:
         S1, S2  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0])
     else:
-        S1, S2,theta,tX,tY  = generalized_procrustes_analysis_2D(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0],output_params=output_params)
+        S1, S2,theta,tX,tY  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0],output_params=output_params)
         thetas.append(theta)
         translations.append(tX)
         translations.append(tY)
@@ -51,7 +50,7 @@ def stack_slices_pairwise(
         if not output_params:
             x, y = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i])
         else:
-            x, y,theta,tX,tY = generalized_procrustes_analysis_2D(new_coor[i], slices[i+1].obsm['spatial'], pis[i],output_params=output_params)
+            x, y,theta,tX,tY = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i],output_params=output_params)
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
@@ -110,7 +109,7 @@ def stack_slices_center(
         if not output_params:
             c, y = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i])
         else:
-            c, y,theta,tX,tY = generalized_procrustes_analysis_2D(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i],output_params=output_params)
+            c, y,theta,tX,tY = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i],output_params=output_params)
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
@@ -148,7 +147,7 @@ def plot_slice(
         ax.axis('off')
 
 
-def generalized_procrustes_analysis(X, Y, pi):
+def generalized_procrustes_analysis(X, Y, pi, output_params = False):
     """
     Finds and applies optimal rotation between spatial coordinates of two layers (may also do a reflection).
     
@@ -156,42 +155,25 @@ def generalized_procrustes_analysis(X, Y, pi):
         X: np array of spatial coordinates (ex: sliceA.obs['spatial'])
         Y: np array of spatial coordinates (ex: sliceB.obs['spatial'])
         pi: mapping between the two layers output by PASTE
+        output_params: Boolean of whether to return rotation angle and translations along with spatial coordiantes.
+
 
     Returns: 
-        Aligned spatial coordinates of X, Y
+        Aligned spatial coordinates of X, Y, rotation angle, translation of X, translation of Y
     """
-    X = X - pi.sum(axis=1).dot(X) #X.mean(axis=0)
-    Y = Y - pi.sum(axis=0).dot(Y) #Y.mean(axis=0)
+    assert X.shape[1] == 2 and Y.shape[1] == 2
+    
+    tX = pi.sum(axis=1).dot(X)
+    tY = pi.sum(axis=0).dot(Y)
+    X = X - tX
+    Y = Y - tY
     H = Y.T.dot(pi.T.dot(X))
     U, S, Vt = np.linalg.svd(H)
     R = Vt.T.dot(U.T)
     Y = R.dot(Y.T).T
-    return X,Y
-
-def generalized_procrustes_analysis_2D(X,Y,pi,output_params=True):
-    """
-    Finds and applies optimal rotation between spatial coordinates of two slices in 2D and returns the rotation angle and translation.
-    
-    Args:
-        X: np array of spatial coordinates (ex: sliceA.obs['spatial'])
-        Y: np array of spatial coordinates (ex: sliceB.obs['spatial'])
-        pi: Mapping between the two layers output by PASTE
-        output_params: Boolean of whether to return rotation angle and translations along with spatial coordiantes.
-    
-    Returns:
-        Aligned spatial coordinates of X, Y, rotation angle, translation of X, translation of Y
-    """
-    assert X.shape[1] == 2 and Y.shape[1] == 2
-    tX = pi.sum(axis=1).dot(X)
-    tY = pi.sum(axis=0).dot(Y)
-    X = X - tX #X.mean(axis=0)
-    Y = Y - tY #Y.mean(axis=0)
-    H = Y.T.dot(pi.T.dot(X))
-    M = np.array([[0,-1],[1,0]])
-    theta = np.arctan(np.trace(M.dot(H))/np.trace(H))
-    R = np.array([[np.cos(theta),-np.sin(theta)],[np.sin(theta),np.cos(theta)]])
-    Y = R.dot(Y.T).T
     if output_params:
+        M = np.array([[0,-1],[1,0]])
+        theta = np.arctan(np.trace(M.dot(H))/np.trace(H))
         return X,Y,theta,tX,tY
     else:
         return X,Y

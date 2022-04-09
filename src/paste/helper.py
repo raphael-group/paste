@@ -1,26 +1,6 @@
-from anndata import AnnData
-from numpy.typing import ArrayLike
-from typing import List
 import numpy as np
 import scipy
 import ot
-
-def filter_for_common_genes(
-    slices: List[AnnData]) -> None:
-    """
-    Filters for the intersection of genes between all slices.
-
-    Args:
-        slices: List of slices.
-    """
-    assert len(slices) > 0, "Cannot have empty list."
-    
-    common_genes = slices[0].var.index
-    for s in slices:
-        common_genes = intersect(common_genes, s.var.index)
-    for i in range(len(slices)):
-        slices[i] = slices[i][:, common_genes]
-    print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
 
 def match_spots_using_spatial_heuristic(
     X,
@@ -32,7 +12,7 @@ def match_spots_using_spatial_heuristic(
     Args:
         X (array-like, optional): Coordinates for spots X.
         Y (array-like, optional): Coordinates for spots Y.
-        use_ot: If ``True``, use optimal transport to calculate mapping. Else, use bipartite matching algorithm.
+        use_ot: If ``True``, use optimal transport ``ot.emd()`` to calculate mapping. Otherwise, use Scipy's ``min_weight_full_bipartite_matching()`` algorithm.
     
     Returns:
         Mapping of spots using a spatial heuristic.

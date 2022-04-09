@@ -28,7 +28,7 @@ def pairwise_align(
     Args:
         sliceA: Slice A to align.
         sliceB: Slice B to align.
-        alpha:  Alignment tuning parameter. Note: 0 ≤ alpha ≤ 1.
+        alpha:  Alignment tuning parameter. Note: 0 <= alpha <= 1.
         dissimilarity: Expression dissimilarity measure: ``'kl'`` or ``'euclidean'``.
         use_rep: If ``None``, uses ``slice.X`` to calculate dissimilarity between spots, otherwise uses the representation given by ``slice.obsm[use_rep]``.
         G_init (array-like, optional): Initial mapping to be used in FGW-OT, otherwise default is uniform mapping.
@@ -175,7 +175,7 @@ def center_align(
         A: Slice to use as the initialization for center alignment; Make sure to include gene expression and spatial information.
         slices: List of slices to use in the center alignment.
         lmbda (array-like, optional): List of probability weights assigned to each slice; If ``None``, use uniform weights.
-        alpha:  Alignment tuning parameter. Note: 0 ≤ alpha ≤ 1.
+        alpha:  Alignment tuning parameter. Note: 0 <= alpha <= 1.
         n_components: Number of components in NMF decomposition.
         threshold: Threshold for convergence of W and H during NMF decomposition.
         max_iter: Maximum number of iterations for our center alignment algorithm.
@@ -249,7 +249,7 @@ def center_align(
     center_coordinates = A.obsm['spatial']
     
     if not isinstance(center_coordinates, np.ndarray):
-        print("Warning: A.obsm['spatial'] is not of type numpy array .")
+        print("Warning: A.obsm['spatial'] is not of type numpy array.")
     
     # Initialize center_slice
     center_slice = AnnData(np.dot(W,H))
