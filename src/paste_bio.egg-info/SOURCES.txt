@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/paste/PASTE.py
+src/paste/__init__.py
+src/paste/helper.py
+src/paste/visualization.py
+src/paste_bio.egg-info/PKG-INFO
+src/paste_bio.egg-info/SOURCES.txt
+src/paste_bio.egg-info/dependency_links.txt
+src/paste_bio.egg-info/not-zip-safe
+src/paste_bio.egg-info/top_level.txt
