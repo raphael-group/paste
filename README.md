@@ -1,3 +1,7 @@
+[![PyPI](https://img.shields.io/pypi/v/paste-bio.svg)](https://pypi.org/project/paste-bio)
+[![Downloads](https://pepy.tech/badge/paste-bio)](https://pepy.tech/project/paste-bio)
+[![Documentation Status](https://readthedocs.org/projects/paste-bio/badge/?version=latest)](https://paste-bio.readthedocs.io/en/stable/?badge=stable)
+
 # PASTE
 
 ![PASTE Overview](https://github.com/raphael-group/paste/blob/main/docs/source/_static/images/paste_overview.png)
