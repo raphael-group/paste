@@ -6,15 +6,11 @@ sphinx:
     fail_on_warning: false
 
 build:
-    image: testing
+    image: latest
 
 python:
     version: 3.8
     install:
     -   method: pip
         path: .
-        extra_requirements:
-        -   docs
-python:
-   install:
-   - requirements: docs/requirements.txt
+    -   requirements: docs/requirements.txt
