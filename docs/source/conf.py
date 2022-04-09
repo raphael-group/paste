@@ -46,12 +46,6 @@ extensions = [
 
 ]
 
-latex_elements = {
-    'preamble': r'''
-    \renewcommand{\hyperref}[2][]{#2}
-'''
-    }
-
 # Moves Type hints from function header into description
 autodoc_typehints = "description"
 
