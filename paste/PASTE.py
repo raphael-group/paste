@@ -249,7 +249,7 @@ def center_align(
     center_coordinates = A.obsm['spatial']
     
     if not isinstance(center_coordinates, np.ndarray):
-        print("Warning: A.obsm['spatial'] is not of type numpy array .")
+        print("Warning: A.obsm['spatial'] is not of type numpy array.")
     
     # Initialize center_slice
     center_slice = AnnData(np.dot(W,H))
