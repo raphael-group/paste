@@ -19,6 +19,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent.parent)) 
 sys.path.insert(0, os.path.abspath("_ext"))
 
+import paste
 
 # -- Project information -----------------------------------------------------
 
