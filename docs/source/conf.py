@@ -77,6 +77,8 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 html_show_sourcelink = False
+html_show_sphinx = False
+
 
 
 nbsphinx_thumbnails = {
