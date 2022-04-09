@@ -1,5 +1,5 @@
 -r ../requirements.txt
-sphinx
+sphinx>=2.0.1
 myst-parser
 nbsphinx
 sphinx-autodoc-typehints
