@@ -8,6 +8,7 @@ def filter_for_common_genes(
     slices: List[AnnData]) -> None:
     """
     Filters for the intersection of genes between all slices.
+    
     Args:
         slices: List of slices.
     """
