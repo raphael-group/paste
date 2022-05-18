@@ -10,13 +10,19 @@ PASTE is a computational method that leverages both gene expression similarity a
 1. `pairwise_align`: align spots across pairwise slices.
 2. `center_align`: integrate multiple slices into one center slice.
 
-You can read our preprint [here](https://www.biorxiv.org/content/10.1101/2021.03.16.435604v1). 
+You can read full paper [here](https://www.nature.com/articles/s41592-022-01459-6). 
+
+Additional examples and the code to reproduce the paper's analyses can be found [here](https://github.com/raphael-group/paste_reproducibility). Preprocessed datasets used in the paper can be found on [zenodo](https://doi.org/10.5281/zenodo.6334774).
 
 PASTE is actively being worked on with future updates coming. 
 
 ### Recent News
 
-As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
+* PASTE is now published in [Nature Methods](https://www.nature.com/articles/s41592-022-01459-6)!
+
+* The code to reproduce the analisys can be found [here](https://github.com/raphael-group/paste_reproducibility).
+
+* As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
 
 ### Installation
 
@@ -156,3 +162,7 @@ Added sample spatial transcriptomics dataset consisting of four breast cancer sl
 [1] Ståhl, Patrik & Salmén, Fredrik & Vickovic, Sanja & Lundmark, Anna & Fernandez Navarro, Jose & Magnusson, Jens & Giacomello, Stefania & Asp, Michaela & Westholm, Jakub & Huss, Mikael & Mollbrink, Annelie & Linnarsson, Sten & Codeluppi, Simone & Borg, Åke & Pontén, Fredrik & Costea, Paul & Sahlén, Pelin Akan & Mulder, Jan & Bergmann, Olaf & Frisén, Jonas. (2016). Visualization and analysis of gene expression in tissue sections by spatial transcriptomics. Science. 353. 78-82. 10.1126/science.aaf2403. 
 
 Note: Original data is (.tsv), but we converted it to (.csv).
+
+### References
+
+Ron Zeira, Max Land, Alexander Strzalkowski and Benjamin J. Raphael. "Alignment and integration of spatial transcriptomics data". Nature Methods (2022). https://doi.org/10.1038/s41592-022-01459-6
