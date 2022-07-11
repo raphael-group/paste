@@ -9,27 +9,28 @@ import matplotlib.pyplot as plt
 """
 
 def stack_slices_pairwise(
-    slices: List[AnnData], 
-    pis: List[np.ndarray], 
+    slices: List[AnnData],
+    pis: List[np.ndarray],
     output_params: bool = False,
     matrix: bool = False
 ) -> Tuple[List[AnnData], Optional[List[float]], Optional[List[np.ndarray]]]:
     """
     Align spatial coordinates of sequential pairwise slices.
-    
-    In other words, align: 
-    
+
+    In other words, align:
+
         slices[0] --> slices[1] --> slices[2] --> ...
-    
+
     Args:
         slices: List of slices.
         pis: List of pi (``pairwise_align()`` output) between consecutive slices.
         output_params: If ``True``, addtionally return angles of rotation (theta) and translations for each slice.
-        matrix: if ``True``, additionally return the rotation as a matrix instead of an angle for each slice
-    
-    Returns: 
+        matrix: if ``True`` and output_params is also ``True``, the rotation is
+            return as a matrix instead of an angle for each slice
+
+    Returns:
         - List of slices with aligned spatial coordinates.
-        
+
         If ``output_params = True``, additionally return:
 
         - List of angles of rotation (theta) for each slice.
@@ -57,13 +58,13 @@ def stack_slices_pairwise(
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
-    
+
     new_slices = []
     for i in range(len(slices)):
         s = slices[i].copy()
         s.obsm['spatial'] = new_coor[i]
         new_slices.append(s)
-    
+
     if not output_params:
         return new_slices
     else:
@@ -71,15 +72,15 @@ def stack_slices_pairwise(
 
 
 def stack_slices_center(
-    center_slice: AnnData, 
-    slices: List[AnnData], 
-    pis: List[np.ndarray], 
+    center_slice: AnnData,
+    slices: List[AnnData],
+    pis: List[np.ndarray],
     output_params: bool = False) -> Tuple[AnnData, List[AnnData], Optional[List[float]], Optional[List[np.ndarray]]]:
     """
     Align spatial coordinates of a list of slices to a center_slice.
-    
+
     In other words, align:
-    
+
         slices[0] --> center_slice
 
         slices[1] --> center_slice
@@ -87,7 +88,7 @@ def stack_slices_center(
         slices[2] --> center_slice
 
         ...
-    
+
     Args:
         center_slice: Inferred center slice.
         slices: List of original slices to be aligned.
@@ -97,7 +98,7 @@ def stack_slices_center(
     Returns:
         - Center slice with aligned spatial coordinates.
         - List of other slices with aligned spatial coordinates.
-        
+
         If ``output_params = True``, additionally return:
 
         - List of angles of rotation (theta) for each slice.
@@ -116,13 +117,13 @@ def stack_slices_center(
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
-    
+
     new_slices = []
     for i in range(len(slices)):
         s = slices[i].copy()
         s.obsm['spatial'] = new_coor[i]
         new_slices.append(s)
-    
+
     new_center = center_slice.copy()
     new_center.obsm['spatial'] = c
     if not output_params:
@@ -131,13 +132,13 @@ def stack_slices_center(
         return new_center, new_slices, thetas, translations
 
 def plot_slice(
-    sliceX: AnnData, 
-    color, 
-    ax: Optional[plt.Axes] = None, 
+    sliceX: AnnData,
+    color,
+    ax: Optional[plt.Axes] = None,
     s: float = 100) -> None:
     """
     Plots slice spatial coordinates.
-    
+
     Args:
         sliceX: Slice to be plotted.
         color: Scatterplot color, any format accepted by ``matplotlib``.
@@ -153,19 +154,20 @@ def plot_slice(
 def generalized_procrustes_analysis(X, Y, pi, output_params = False, matrix = False):
     """
     Finds and applies optimal rotation between spatial coordinates of two layers (may also do a reflection).
-    
+
     Args:
         X: np array of spatial coordinates (ex: sliceA.obs['spatial'])
         Y: np array of spatial coordinates (ex: sliceB.obs['spatial'])
         pi: mapping between the two layers output by PASTE
         output_params: Boolean of whether to return rotation angle and translations along with spatial coordiantes.
+        matrix: Boolean of whether to return the rotation as a matrix or an angle
 
 
-    Returns: 
+    Returns:
         Aligned spatial coordinates of X, Y, rotation angle, translation of X, translation of Y
     """
     assert X.shape[1] == 2 and Y.shape[1] == 2
-    
+
     tX = pi.sum(axis=1).dot(X)
     tY = pi.sum(axis=0).dot(Y)
     X = X - tX
@@ -180,5 +182,5 @@ def generalized_procrustes_analysis(X, Y, pi, output_params = False, matrix = Fa
         return X,Y,theta,tX,tY
     elif output_params and matrix:
         return X, Y, R, tX, tY
-    else:    
+    else:
         return X,Y
