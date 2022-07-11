@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 def stack_slices_pairwise(
     slices: List[AnnData], 
     pis: List[np.ndarray], 
-    output_params: bool = False) -> Tuple[List[AnnData], Optional[List[float]], Optional[List[np.ndarray]]]:
+    output_params: bool = False,
+    matrix: bool = False
+) -> Tuple[List[AnnData], Optional[List[float]], Optional[List[np.ndarray]]]:
     """
     Align spatial coordinates of sequential pairwise slices.
     
@@ -23,6 +25,7 @@ def stack_slices_pairwise(
         slices: List of slices.
         pis: List of pi (``pairwise_align()`` output) between consecutive slices.
         output_params: If ``True``, addtionally return angles of rotation (theta) and translations for each slice.
+        matrix: if ``True``, additionally return the rotation as a matrix instead of an angle for each slice
     
     Returns: 
         - List of slices with aligned spatial coordinates.
@@ -40,7 +43,7 @@ def stack_slices_pairwise(
     if not output_params:
         S1, S2  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0])
     else:
-        S1, S2,theta,tX,tY  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0],output_params=output_params)
+        S1, S2,theta,tX,tY  = generalized_procrustes_analysis(slices[0].obsm['spatial'], slices[1].obsm['spatial'], pis[0],output_params=output_params, matrix=matrix)
         thetas.append(theta)
         translations.append(tX)
         translations.append(tY)
@@ -50,7 +53,7 @@ def stack_slices_pairwise(
         if not output_params:
             x, y = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i])
         else:
-            x, y,theta,tX,tY = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i],output_params=output_params)
+            x, y,theta,tX,tY = generalized_procrustes_analysis(new_coor[i], slices[i+1].obsm['spatial'], pis[i],output_params=output_params, matrix=matrix)
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
@@ -109,7 +112,7 @@ def stack_slices_center(
         if not output_params:
             c, y = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i])
         else:
-            c, y,theta,tX,tY = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i],output_params=output_params)
+            c, y,theta,tX,tY = generalized_procrustes_analysis(center_slice.obsm['spatial'], slices[i].obsm['spatial'], pis[i],output_params=output_params, matrix=matrix)
             thetas.append(theta)
             translations.append(tY)
         new_coor.append(y)
@@ -147,7 +150,7 @@ def plot_slice(
         ax.axis('off')
 
 
-def generalized_procrustes_analysis(X, Y, pi, output_params = False):
+def generalized_procrustes_analysis(X, Y, pi, output_params = False, matrix = False):
     """
     Finds and applies optimal rotation between spatial coordinates of two layers (may also do a reflection).
     
@@ -171,9 +174,11 @@ def generalized_procrustes_analysis(X, Y, pi, output_params = False):
     U, S, Vt = np.linalg.svd(H)
     R = Vt.T.dot(U.T)
     Y = R.dot(Y.T).T
-    if output_params:
+    if output_params and not matrix:
         M = np.array([[0,-1],[1,0]])
         theta = np.arctan(np.trace(M.dot(H))/np.trace(H))
         return X,Y,theta,tX,tY
-    else:
+    elif output_params and matrix:
+        return X, Y, R, tX, tY
+    else:    
         return X,Y
