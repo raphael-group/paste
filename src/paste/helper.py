@@ -135,12 +135,12 @@ def apply_trsf(
     `points`.
 
     Args:
-        M (nd.array): a 2x2 rotation matrix.
-        translation (nd.array): a translation vector of length 2.
-        points (nd.array): a nx2 array of `n` points 2D positions.
+        M (nd.array): A 2x2 rotation matrix.
+        translation (nd.array): A translation vector of length 2.
+        points (nd.array): A nx2 array of `n` points 2D positions.
 
     Returns:
-        (nd.array) a nx2 matrix of the `n` points transformed.
+        (nd.array) A nx2 matrix of the `n` points transformed.
     """
     if not isinstance(translation, np.ndarray):
         translation = np.array(translation)

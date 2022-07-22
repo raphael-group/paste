@@ -25,7 +25,7 @@ def stack_slices_pairwise(
         slices: List of slices.
         pis: List of pi (``pairwise_align()`` output) between consecutive slices.
         output_params: If ``True``, addtionally return angles of rotation (theta) and translations for each slice.
-        matrix: if ``True`` and output_params is also ``True``, the rotation is
+        matrix: If ``True`` and output_params is also ``True``, the rotation is
             return as a matrix instead of an angle for each slice.
 
     Returns:
@@ -95,7 +95,7 @@ def stack_slices_center(
         slices: List of original slices to be aligned.
         pis: List of pi (``center_align()`` output) between center_slice and slices.
         output_params: If ``True``, additionally return angles of rotation (theta) and translations for each slice.
-        matrix: if ``True`` and output_params is also ``True``, the rotation is
+        matrix: If ``True`` and output_params is also ``True``, the rotation is
             return as a matrix instead of an angle for each slice.
 
     Returns:
@@ -163,11 +163,11 @@ def generalized_procrustes_analysis(X, Y, pi, output_params = False, matrix = Fa
         Y: np array of spatial coordinates (ex: sliceB.obs['spatial'])
         pi: mapping between the two layers output by PASTE
         output_params: Boolean of whether to return rotation angle and translations along with spatial coordiantes.
-        matrix: Boolean of whether to return the rotation as a matrix or an angle
+        matrix: Boolean of whether to return the rotation as a matrix or an angle.
 
 
     Returns:
-        Aligned spatial coordinates of X, Y, rotation angle, translation of X, translation of Y
+        Aligned spatial coordinates of X, Y, rotation angle, translation of X, translation of Y.
     """
     assert X.shape[1] == 2 and Y.shape[1] == 2
 
