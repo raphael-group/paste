@@ -34,5 +34,6 @@ Miscellaneous
 
    filter_for_common_genes
    match_spots_using_spatial_heuristic
+   apply_trsf
 
 
