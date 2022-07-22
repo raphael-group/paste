@@ -26,7 +26,7 @@ def stack_slices_pairwise(
         pis: List of pi (``pairwise_align()`` output) between consecutive slices.
         output_params: If ``True``, addtionally return angles of rotation (theta) and translations for each slice.
         matrix: if ``True`` and output_params is also ``True``, the rotation is
-            return as a matrix instead of an angle for each slice
+            return as a matrix instead of an angle for each slice.
 
     Returns:
         - List of slices with aligned spatial coordinates.
@@ -96,7 +96,7 @@ def stack_slices_center(
         pis: List of pi (``center_align()`` output) between center_slice and slices.
         output_params: If ``True``, additionally return angles of rotation (theta) and translations for each slice.
         matrix: if ``True`` and output_params is also ``True``, the rotation is
-            return as a matrix instead of an angle for each slice
+            return as a matrix instead of an angle for each slice.
 
     Returns:
         - Center slice with aligned spatial coordinates.

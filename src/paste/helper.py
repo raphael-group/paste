@@ -132,15 +132,15 @@ def apply_trsf(
     """
     Apply a rotation from a 2x2 rotation matrix `M` together with
     a translation from a translation vector of length 2 `translation` to a list of
-    `points`
+    `points`.
 
     Args:
-        M (nd.array): a 2x2 rotation matrix
-        translation (nd.array): a translation vector of length 2
-        points (nd.array): a nx2 array of `n` points 2D positions
+        M (nd.array): a 2x2 rotation matrix.
+        translation (nd.array): a translation vector of length 2.
+        points (nd.array): a nx2 array of `n` points 2D positions.
 
     Returns:
-        (nd.array) a nx2 matrix of the `n` points transformed
+        (nd.array) a nx2 matrix of the `n` points transformed.
     """
     if not isinstance(translation, np.ndarray):
         translation = np.array(translation)
