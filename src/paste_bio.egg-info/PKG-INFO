@@ -5,15 +5,17 @@ Summary: A computational method to align and integrate spatial transcriptomics e
 Home-page: https://github.com/raphael-group/paste
 Author: Max Land
 Author-email: max.ruikang.land@gmail.com
-License: UNKNOWN
 Project-URL: Bug Tracker, https://github.com/raphael-group/paste/issues
-Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
+
+[![PyPI](https://img.shields.io/pypi/v/paste-bio.svg)](https://pypi.org/project/paste-bio)
+[![Downloads](https://pepy.tech/badge/paste-bio)](https://pepy.tech/project/paste-bio)
+[![Documentation Status](https://readthedocs.org/projects/paste-bio/badge/?version=latest)](https://paste-bio.readthedocs.io/en/stable/?badge=stable)
 
 # PASTE
 
@@ -23,13 +25,19 @@ PASTE is a computational method that leverages both gene expression similarity a
 1. `pairwise_align`: align spots across pairwise slices.
 2. `center_align`: integrate multiple slices into one center slice.
 
-You can read our preprint [here](https://www.biorxiv.org/content/10.1101/2021.03.16.435604v1). 
+You can read full paper [here](https://www.nature.com/articles/s41592-022-01459-6). 
+
+Additional examples and the code to reproduce the paper's analyses can be found [here](https://github.com/raphael-group/paste_reproducibility). Preprocessed datasets used in the paper can be found on [zenodo](https://doi.org/10.5281/zenodo.6334774).
 
 PASTE is actively being worked on with future updates coming. 
 
 ### Recent News
 
-As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
+* PASTE is now published in [Nature Methods](https://www.nature.com/articles/s41592-022-01459-6)!
+
+* The code to reproduce the analisys can be found [here](https://github.com/raphael-group/paste_reproducibility).
+
+* As of version 1.2.0, PASTE now supports GPU implementation via Pytorch. For more details, see the GPU section of the [Tutorial notebook](docs/source/notebooks/getting-started.ipynb).
 
 ### Installation
 
@@ -170,4 +178,6 @@ Added sample spatial transcriptomics dataset consisting of four breast cancer sl
 
 Note: Original data is (.tsv), but we converted it to (.csv).
 
+### References
 
+Ron Zeira, Max Land, Alexander Strzalkowski and Benjamin J. Raphael. "Alignment and integration of spatial transcriptomics data". Nature Methods (2022). https://doi.org/10.1038/s41592-022-01459-6
