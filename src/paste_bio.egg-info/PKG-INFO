@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: paste-bio
-Version: 1.2.2
+Version: 1.3.0
 Summary: A computational method to align and integrate spatial transcriptomics experiments.
 Home-page: https://github.com/raphael-group/paste
 Author: Max Land

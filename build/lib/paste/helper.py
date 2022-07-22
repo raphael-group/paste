@@ -8,12 +8,12 @@ def filter_for_common_genes(
     slices: List[AnnData]) -> None:
     """
     Filters for the intersection of genes between all slices.
-    
+
     Args:
         slices: List of slices.
     """
     assert len(slices) > 0, "Cannot have empty list."
-    
+
     common_genes = slices[0].var.index
     for s in slices:
         common_genes = intersect(common_genes, s.var.index)
@@ -32,7 +32,7 @@ def match_spots_using_spatial_heuristic(
         X (array-like, optional): Coordinates for spots X.
         Y (array-like, optional): Coordinates for spots Y.
         use_ot: If ``True``, use optimal transport ``ot.emd()`` to calculate mapping. Otherwise, use Scipy's ``min_weight_full_bipartite_matching()`` algorithm.
-    
+
     Returns:
         Mapping of spots using a spatial heuristic.
     """
@@ -52,16 +52,16 @@ def match_spots_using_spatial_heuristic(
 def kl_divergence(X, Y):
     """
     Returns pairwise KL divergence (over all pairs of samples) of two matrices X and Y.
-    
+
     Args:
         X: np array with dim (n_samples by n_features)
         Y: np array with dim (m_samples by n_features)
-    
+
     Returns:
         D: np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
-    
+
     X = X/X.sum(axis=1, keepdims=True)
     Y = Y/Y.sum(axis=1, keepdims=True)
     log_X = np.log(X)
@@ -73,20 +73,20 @@ def kl_divergence(X, Y):
 def kl_divergence_backend(X, Y):
     """
     Returns pairwise KL divergence (over all pairs of samples) of two matrices X and Y.
-    
+
     Takes advantage of POT backend to speed up computation.
-    
+
     Args:
         X: np array with dim (n_samples by n_features)
         Y: np array with dim (m_samples by n_features)
-    
+
     Returns:
         D: np array with dim (n_samples by m_samples). Pairwise KL divergence matrix.
     """
     assert X.shape[1] == Y.shape[1], "X and Y do not have the same number of features."
 
     nx = ot.backend.get_backend(X,Y)
-    
+
     X = X/nx.sum(X,axis=1, keepdims=True)
     Y = Y/nx.sum(Y,axis=1, keepdims=True)
     log_X = nx.log(X)
@@ -97,37 +97,65 @@ def kl_divergence_backend(X, Y):
     return nx.to_numpy(D)
 
 
-def intersect(lst1, lst2): 
+def intersect(lst1, lst2):
     """
     Gets and returns intersection of two lists.
 
     Args:
         lst1: List
         lst2: List
-    
+
     Returns:
         lst3: List of common elements.
     """
 
     temp = set(lst2)
     lst3 = [value for value in lst1 if value in temp]
-    return lst3 
+    return lst3
 
-def norm_and_center_coordinates(X): 
+def norm_and_center_coordinates(X):
     """
     Normalizes and centers coordinates at the origin.
 
     Args:
         X: Numpy array
-    
+
     Returns:
         X_new: Updated coordiantes.
     """
     return (X-X.mean(axis=0))/min(scipy.spatial.distance.pdist(X))
 
+def apply_trsf(
+    M: np.ndarray,
+    translation: List[float],
+    points: np.ndarray) -> np.ndarray:
+    """
+    Apply a rotation from a 2x2 rotation matrix `M` together with
+    a translation from a translation vector of length 2 `translation` to a list of
+    `points`.
+
+    Args:
+        M (nd.array): a 2x2 rotation matrix.
+        translation (nd.array): a translation vector of length 2.
+        points (nd.array): a nx2 array of `n` points 2D positions.
+
+    Returns:
+        (nd.array) a nx2 matrix of the `n` points transformed.
+    """
+    if not isinstance(translation, np.ndarray):
+        translation = np.array(translation)
+    trsf = np.identity(3)
+    trsf[:-1, :-1] = M
+    tr = np.identity(3)
+    tr[:-1, -1] = -translation
+    trsf = trsf @ tr
+
+    flo = points.T
+    flo_pad = np.pad(flo, ((0, 1), (0, 0)), constant_values=1)
+    return ((trsf @ flo_pad)[:-1]).T
 
 ## Covert a sparse matrix into a dense np array
 to_dense_array = lambda X: X.toarray() if isinstance(X,scipy.sparse.csr.spmatrix) else np.array(X)
 
 ## Returns the data matrix or representation
-extract_data_matrix = lambda adata,rep: adata.X if rep is None else adata.obsm[rep] 
+extract_data_matrix = lambda adata,rep: adata.X if rep is None else adata.obsm[rep]
