@@ -75,6 +75,7 @@ def stack_slices_center(
     center_slice: AnnData,
     slices: List[AnnData],
     pis: List[np.ndarray],
+    matrix: bool = False,
     output_params: bool = False) -> Tuple[AnnData, List[AnnData], Optional[List[float]], Optional[List[np.ndarray]]]:
     """
     Align spatial coordinates of a list of slices to a center_slice.
@@ -94,6 +95,8 @@ def stack_slices_center(
         slices: List of original slices to be aligned.
         pis: List of pi (``center_align()`` output) between center_slice and slices.
         output_params: If ``True``, additionally return angles of rotation (theta) and translations for each slice.
+        matrix: if ``True`` and output_params is also ``True``, the rotation is
+            return as a matrix instead of an angle for each slice
 
     Returns:
         - Center slice with aligned spatial coordinates.
