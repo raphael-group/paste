@@ -1,6 +1,8 @@
 [![PyPI](https://img.shields.io/pypi/v/paste-bio.svg)](https://pypi.org/project/paste-bio)
 [![Downloads](https://pepy.tech/badge/paste-bio)](https://pepy.tech/project/paste-bio)
 [![Documentation Status](https://readthedocs.org/projects/paste-bio/badge/?version=latest)](https://paste-bio.readthedocs.io/en/stable/?badge=stable)
+[![Anaconda](https://anaconda.org/bioconda/paste-bio/badges/version.svg)](https://anaconda.org/bioconda/paste-bio/badges/version.svg)
+[![bioconda-downloads](https://anaconda.org/bioconda/paste-bio/badges/downloads.svg)](https://anaconda.org/bioconda/paste-bio/badges/downloads.svg)
 
 # PASTE
 
