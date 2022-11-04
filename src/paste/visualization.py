@@ -154,6 +154,41 @@ def plot_slice(
         ax.axis('off')
 
 
+def plot_slice_cluster(
+    sliceX: AnnData,
+    obs_param: str,
+    title: Optional[str] = None,
+    ax: Optional[plt.Axes] = None,
+    remove_legend: Optional[bool] = False,
+    s: float = 100) -> None:
+    """
+    Plots slice spatial coordinates.
+
+    Args:
+        sliceX: Slice to be plotted.
+        color: Scatterplot color, any format accepted by ``matplotlib``.
+        ax: Pre-existing axes for the plot. Otherwise, call ``matplotlib.pyplot.gca()`` internally.
+        s: Size of spots.
+    """
+    df = pd.DataFrame({'X' : sliceX.obsm['spatial'][:,0],
+              'Y' : sliceX.obsm['spatial'][:,1],
+              obs_param : sliceX.obs[obs_param]
+             }
+    )
+    g = sns.scatterplot(x = 'X', y = 'Y', data = df,
+               hue = 'cell_type',linewidth = 0, 
+               s = s,marker = '.',ax=ax)
+    if title:
+        g.set(title=title)
+    if remove_legend:
+        g.legend_.remove()
+    else:
+        sns.move_legend(g,loc='upper left', bbox_to_anchor=(1, 1),frameon=False)
+    if ax:
+        ax.invert_yaxis()
+        ax.axis('off')
+
+
 def generalized_procrustes_analysis(X, Y, pi, output_params = False, matrix = False):
     """
     Finds and applies optimal rotation between spatial coordinates of two layers (may also do a reflection).

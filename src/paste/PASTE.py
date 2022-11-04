@@ -3,7 +3,7 @@ import numpy as np
 from anndata import AnnData
 import ot
 from sklearn.decomposition import NMF
-from .helper import intersect, kl_divergence_backend, to_dense_array, extract_data_matrix
+from .helper import intersect, kl_divergence_backend, to_dense_array, extract_data_matrix, initiate_logger
 
 def pairwise_align(
     sliceA: AnnData, 
@@ -49,6 +49,8 @@ def pairwise_align(
         
         - Objective function output of FGW-OT.
     """
+    # Set up the logger
+    logs = initiate_logger('pairwise_align')
     
     # Determine if gpu or cpu is being used
     if use_gpu:
@@ -193,13 +195,15 @@ def center_align(
         - Inferred center slice with full and low dimensional representations (W, H) of the gene expression matrix.
         - List of pairwise alignment mappings of the center slice (rows) to each input slice (columns).
     """
-    
+    # Set up logger
+    logs = initiate_logger('center_align')
+
     # Determine if gpu or cpu is being used
     if use_gpu:
         try:
             import torch
         except:
-             print("We currently only have gpu support for Pytorch. Please install torch.")
+            print("We currently only have gpu support for Pytorch. Please install torch.")
                 
         if isinstance(backend,ot.backend.TorchBackend):
             if torch.cuda.is_available():
@@ -249,7 +253,7 @@ def center_align(
     center_coordinates = A.obsm['spatial']
     
     if not isinstance(center_coordinates, np.ndarray):
-        print("Warning: A.obsm['spatial'] is not of type numpy array.")
+        logs.warning("Warning: A.obsm['spatial'] is not of type numpy array.")
     
     # Initialize center_slice
     center_slice = AnnData(np.dot(W,H))

@@ -1,8 +1,30 @@
 from typing import List
 from anndata import AnnData
+import scanpy as sc
 import numpy as np
 import scipy
 import ot
+import logging
+
+
+def initiate_logger(name: str) -> logging.Logger:
+#     logging.basicConfig(
+#         format='%(asctime)s %(levelname)-8s %(message)s',
+#         level=logging.INFO,
+#         datefmt='%Y-%m-%d %H:%M:%S'
+#     )
+    logs = logging.getLogger(name)
+    logs.setLevel(logging.INFO)
+    
+    ch = logging.StreamHandler()
+    formatter = logging.Formatter(
+        fmt = '%(asctime)s - %(name)s - %(levelname)-8s %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    ch.setFormatter(formatter)
+    logs.addHandler(ch)
+    return logs
+
 
 def filter_for_common_genes(
     slices: List[AnnData]) -> None:
@@ -21,9 +43,35 @@ def filter_for_common_genes(
         slices[i] = slices[i][:, common_genes]
     print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
 
+
+def filter_for_common_var_genes(
+    slices: List[AnnData],
+    n_top_genes: int = 2000) -> None:
+    """
+    Filters for the intersection of genes between all slices, but
+    only considers highly variable genes
+    TODO: Should we take highly spatial DE?
+
+    Args:
+        slices: List of slices.
+    """
+    assert len(slices) > 0, "Cannot have empty list."
+    _ = list(map(lambda obj : sc.pp.highly_variable_genes(slices,n_top_genes=n_top_genes))
+    common_genes = slices[0].var[slices[0].var.highly_variable].index
+    for s in slices:
+        common_genes = intersect(
+            common_genes, 
+            s.var[s.var.highly_variable].index
+        )
+    for i in range(len(slices)):
+        slices[i] = slices[i][:, common_genes]
+    print('Filtered all slices for common genes. There are ' + str(len(common_genes)) + ' common genes.')
+
+
 def match_spots_using_spatial_heuristic(
     X,
     Y,
+    use_c: bool = False,
     use_ot: bool = True) -> np.ndarray:
     """
     Calculates and returns a mapping of spots using a spatial heuristic.
@@ -38,7 +86,10 @@ def match_spots_using_spatial_heuristic(
     """
     n1,n2=len(X),len(Y)
     X,Y = norm_and_center_coordinates(X),norm_and_center_coordinates(Y)
-    dist = scipy.spatial.distance_matrix(X,Y)
+    if use_c:
+        dist = scipy.spatial.distance.cdist(X,Y)
+    else:
+        dist = scipy.spatial.distance_matrix(X,Y)
     if use_ot:
         pi = ot.emd(np.ones(n1)/n1, np.ones(n2)/n2, dist)
     else:
