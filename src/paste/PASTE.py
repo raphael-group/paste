@@ -76,6 +76,12 @@ def pairwise_align(
     common_genes = intersect(sliceA.var.index, sliceB.var.index)
     sliceA = sliceA[:, common_genes]
     sliceB = sliceB[:, common_genes]
+
+    # check if slices are valid
+    for s in [sliceA, sliceB]:
+        if not len(s):
+            raise ValueError(f"Found empty `AnnData`:\n{sliceA}.")
+
     
     # Backend
     nx = backend    
