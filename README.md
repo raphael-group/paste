@@ -16,8 +16,6 @@ You can read full paper [here](https://www.nature.com/articles/s41592-022-01459-
 
 Additional examples and the code to reproduce the paper's analyses can be found [here](https://github.com/raphael-group/paste_reproducibility). Preprocessed datasets used in the paper can be found on [zenodo](https://doi.org/10.5281/zenodo.6334774).
 
-PASTE is actively being worked on with future updates coming. 
-
 ### Recent News
 
 * PASTE is now published in [Nature Methods](https://www.nature.com/articles/s41592-022-01459-6)!
