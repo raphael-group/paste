@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: paste-bio
-Version: 1.3.0
+Version: 1.4.0
 Summary: A computational method to align and integrate spatial transcriptomics experiments.
 Home-page: https://github.com/raphael-group/paste
 Author: Max Land
@@ -30,8 +30,6 @@ PASTE is a computational method that leverages both gene expression similarity a
 You can read full paper [here](https://www.nature.com/articles/s41592-022-01459-6). 
 
 Additional examples and the code to reproduce the paper's analyses can be found [here](https://github.com/raphael-group/paste_reproducibility). Preprocessed datasets used in the paper can be found on [zenodo](https://doi.org/10.5281/zenodo.6334774).
-
-PASTE is actively being worked on with future updates coming. 
 
 ### Recent News
 
