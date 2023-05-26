@@ -345,7 +345,7 @@ def my_fused_gromov_wasserstein(M, C1, C2, p, q, G_init = None, loss_fun='square
         return ot.gromov.gwggrad(constC, hC1, hC2, G)
 
     if log:
-        res, log = ot.gromov.cg(p, q, (1 - alpha) * M, alpha, f, df, G0, armijo=armijo, C1=C1, C2=C2, constC=constC, log=True, **kwargs)
+        res, log = ot.optim.cg(p, q, (1 - alpha) * M, alpha, f, df, G0, armijo=armijo, C1=C1, C2=C2, constC=constC, log=True, **kwargs)
 
         fgw_dist = log['loss'][-1]
 
@@ -355,4 +355,4 @@ def my_fused_gromov_wasserstein(M, C1, C2, p, q, G_init = None, loss_fun='square
         return res, log
 
     else:
-        return ot.gromov.cg(p, q, (1 - alpha) * M, alpha, f, df, G0, armijo=armijo, C1=C1, C2=C2, constC=constC, **kwargs)
+        return ot.optim.cg(p, q, (1 - alpha) * M, alpha, f, df, G0, armijo=armijo, C1=C1, C2=C2, constC=constC, **kwargs)
